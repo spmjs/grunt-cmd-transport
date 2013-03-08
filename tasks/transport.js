@@ -67,10 +67,10 @@ module.exports = function(grunt) {
         }
 
         destfile = path.join(fileObj.dest, fname);
-        debugfile = destfile.replace(
-          new RegExp('\\' + extname + '$'),
-          '-debug' + extname
-        );
+        if (extname !== '.js') {
+          destfile += '.js';
+        }
+        debugfile = destfile.replace(/\.js$/, '-debug.js');
         grunt.log.writeln('Transporting "' + fpath + '" => ' + destfile);
 
         id = iduri.idFromPackage(options.pkg, fname, options.format);
@@ -107,6 +107,7 @@ module.exports = function(grunt) {
         } else if (type === 'css') {
           // transport css to js
           data = css(data, id);
+          data = ast.getAst(data).print_to_string(options.uglify);
           grunt.file.write(destfile, data);
           createDebug(data);
         } else if (type == 'handlebars') {

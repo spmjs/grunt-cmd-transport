@@ -42,6 +42,20 @@ module.exports = function(grunt) {
           src: '*.js',
           dest: 'tmp/chain'
         }]
+      },
+      css: {
+        options: {
+          pkg: {
+            family: 'cmd',
+            name: 'css',
+            version: '1.0.0'
+          }
+        },
+        files: [{
+          cwd: 'test/fixtures/css',
+          src: '*.css',
+          dest: 'tmp/css'
+        }]
       }
     },
 

@@ -3,6 +3,7 @@
 > Transport javascript into cmd.
 
 ## Getting Started
+
 This plugin requires Grunt `~0.4.0`
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
@@ -17,14 +18,15 @@ One the plugin has been installed, it may be enabled inside your Gruntfile with 
 grunt.loadNpmTasks('grunt-cmd-transport');
 ```
 
-## The "cmd_transport" task
+## The "transport" task
 
 ### Overview
+
 In your project's Gruntfile, add a section named `cmd_transport` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  cmd_transport: {
+  transport: {
     options: {
       // Task-specific options go here.
     },
@@ -37,53 +39,83 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.paths
+
+Type: `Array`
+Default value: `['sea-modules']`
+
+Where are the modules in the sea.
+
+#### options.format
+
 Type: `String`
-Default value: `',  '`
+Default value: `{{family}}/{{name}}/{{version}}/{{filename}}`
 
-A string value that is used to do something with whatever.
+The format of the module's id.
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+#### options.pkg
 
-A string value that is used to do something else with whatever else.
+Type: `Object`
+Default value: `current package.json`
+
+The package object, usually it's everything in the `package.json`.
+
+#### options.debug
+
+Type: `Boolean`
+Default value: `true`
+
+Create a debugfile or not.
+
+#### options.uglify
+
+Type: `Object`
+
+Uglify prettifier, you really don't have to change this value.
+
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+Gruntfile use default options.
+
 
 ```js
 grunt.initConfig({
-  cmd_transport: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+    transport: {
+        target_name: {
+            files: [{
+                cwd: 'src',
+                src: '**/*',
+                dest: 'dist'
+            }]
+        }
+    }
+});
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+Change the id format:
 
 ```js
 grunt.initConfig({
-  cmd_transport: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+    transport: {
+        target: {
+            options: {
+                format: '{{filename}}'
+            },
+            files: [{
+                cwd: 'src',
+                src: '**/*',
+                dest: 'dist'
+            }]
+        }
+    }
+});
 ```
+
 
 ## Contributing
+
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+

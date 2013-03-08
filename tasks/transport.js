@@ -11,6 +11,7 @@ var path = require('path');
 var cmd = require('cmd-util');
 var ast = cmd.ast;
 var iduri = cmd.iduri;
+var css = require('./lib/css');
 
 module.exports = function(grunt) {
 
@@ -73,10 +74,10 @@ module.exports = function(grunt) {
         grunt.log.writeln('Transporting "' + fpath + '" => ' + destfile);
 
         id = iduri.idFromPackage(options.pkg, fname, options.format);
+        data = grunt.file.read(fpath);
 
-        // transport pure js
         if (type === 'javascript') {
-          data = grunt.file.read(fpath);
+          // transport pure js
           astCache = ast.getAst(data);
 
           if (ast.parseFirst(astCache).id) {
@@ -101,20 +102,29 @@ module.exports = function(grunt) {
           data = astCache.print_to_string(options.uglify);
           grunt.file.write(destfile, data);
 
-          if (options.debug) {
-            grunt.log.writeln('Creating debug file: ' + debugfile);
-
-            astCache = ast.modify(astCache, function(v) {
-              return v + '-debug';
-            });
-            data = astCache.print_to_string(options.uglify);
-
-            grunt.file.write(debugfile, data);
-          }
+          createDebug(astCache);
 
         } else if (type === 'css') {
-
+          // transport css to js
+          data = css(data, id);
+          grunt.file.write(destfile, data);
+          createDebug(data);
+        } else if (type == 'handlebars') {
         }
+
+        function createDebug(data) {
+          if (!options.debug) {
+            return;
+          }
+          grunt.log.writeln('Creating debug file: ' + debugfile);
+
+          data = ast.modify(data, function(v) {
+            return v + '-debug';
+          });
+          data = data.print_to_string(options.uglify);
+          grunt.file.write(debugfile, data);
+        }
+
       });
     });
   });

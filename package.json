@@ -28,8 +28,9 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "cmd-util": "*",
-    "uglify-js": "*"
+    "clean-css": "~0.10.1",
+    "cmd-util": "~0.2.0",
+    "uglify-js": "~2.2.5"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.1.1",

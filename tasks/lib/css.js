@@ -2,7 +2,7 @@
 // spmjs/spm#581
 
 var format = require('util').format;
-var cleancss = require('cleancss');
+var cleancss = require('clean-css');
 
 module.exports = function(code, id) {
 

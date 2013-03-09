@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       paths: ['sea-modules'],
       format: '{{family}}/{{name}}/{{version}}/{{filename}}',
 
-      // if create a debug file
+      // create a debug file or not
       debug: true,
 
       pkg: 'package.json',
@@ -110,7 +110,7 @@ module.exports = function(grunt) {
           data = ast.getAst(data).print_to_string(options.uglify);
           grunt.file.write(destfile, data);
           createDebug(data);
-        } else if (type == 'handlebars') {
+        } else if (type === 'handlebars') {
         }
 
         function createDebug(data) {

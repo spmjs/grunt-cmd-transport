@@ -13,3 +13,12 @@ exports.chain = {
     test.done();
   },
 };
+
+exports.css = {
+  simple: function(test) {
+    var actual = grunt.file.read('tmp/css/simple.css.js');
+    var parsed = ast.parseFirst(actual);
+    test.equal(parsed.id, 'cmd/css/1.0.0/simple.css', 'should get the rgith id');
+    test.done();
+  },
+};

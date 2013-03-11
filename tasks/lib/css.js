@@ -25,6 +25,8 @@ module.exports = function(code, id) {
     keepSpecialComments: 0,
     removeEmpty: true
   });
+  // spmjs/spm#651
+  code = code.replace(/\\0/g, '\\\\0');
   code = format(tpl, id, code.replace(/\'/g, '\\\''));
 
   return code;

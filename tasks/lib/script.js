@@ -5,6 +5,49 @@ var iduri = require('cmd-util').iduri;
 exports.init = function(grunt) {
   var exports = {};
 
+  exports.jsParser = function(fileObj, options) {
+    var data = grunt.file.read(fileObj.src);
+    var astCache = ast.getAst(data);
+
+    if (ast.parseFirst(astCache).id) {
+      grunt.log.warn('found id in "' + fileObj.src + '"');
+      grunt.file.write(fileObj.dest, data);
+      return;
+    }
+    var deps = relativeDependencies(fileObj.src, options);
+
+    if (deps.length) {
+      grunt.log.writeln('found dependencies ' + deps);
+    } else {
+      grunt.log.writeln('found no dependencies');
+    }
+
+    astCache = ast.modify(astCache, {
+      id: iduri.idFromPackage(options.pkg, fileObj.name, options.format),
+      dependencies: deps,
+      require: function(v) {
+        return iduri.parseAlias(options.pkg, v);
+      }
+    });
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(fileObj.dest, data);
+
+    if (!options.debug) {
+      return;
+    }
+    var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
+    grunt.log.writeln('Creating debug file: ' + dest);
+
+    astCache = ast.modify(data, function(v) {
+      return v + '-debug';
+    });
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(dest, data);
+  };
+
+
+  // helpers
+  // ----------------
   function moduleDependencies(id, options) {
     if (!iduri.isAlias(options.pkg, id)) {
       grunt.log.warn('alias not defined.');
@@ -75,10 +118,6 @@ exports.init = function(grunt) {
     });
     return deps;
   }
-
-  exports.get = function(fpath, options) {
-    return relativeDependencies(fpath, options);
-  };
 
   return exports;
 };

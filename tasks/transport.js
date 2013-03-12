@@ -14,13 +14,13 @@ var iduri = cmd.iduri;
 
 module.exports = function(grunt) {
 
-  var dependency = require('./lib/dependency').init(grunt);
-  var css = require('./lib/css').init(grunt);
+  var script = require('./lib/script').init(grunt);
+  var style = require('./lib/style').init(grunt);
 
   // default parsers, add more parsers here
   var parsers = {
-    '.js': jsParser,
-    '.css': [css.css2jsParser],
+    '.js': [script.jsParser],
+    '.css': [style.css2jsParser],
   };
 
   var data, astCache;
@@ -85,43 +85,4 @@ module.exports = function(grunt) {
       });
     });
   });
-
-  function jsParser(fileObj, options) {
-    var data = grunt.file.read(fileObj.src);
-    var astCache = ast.getAst(data);
-
-    if (ast.parseFirst(astCache).id) {
-      grunt.log.warn('found id in "' + fileObj.src + '"');
-      grunt.file.write(fileObj.dest, data);
-      return;
-    }
-    var deps = dependency.get(fileObj.src, options);
-    if (deps.length) {
-      grunt.log.writeln('found dependencies ' + deps);
-    } else {
-      grunt.log.writeln('found no dependencies');
-    }
-
-    astCache = ast.modify(astCache, {
-      id: iduri.idFromPackage(options.pkg, fileObj.name, options.format),
-      dependencies: deps,
-      require: function(v) {
-        return iduri.parseAlias(options.pkg, v);
-      }
-    });
-    data = astCache.print_to_string(options.uglify);
-    grunt.file.write(fileObj.dest, data);
-
-    if (!options.debug) {
-      return;
-    }
-    var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
-
-    astCache = ast.modify(data, function(v) {
-      return v + '-debug';
-    });
-    data = astCache.print_to_string(options.uglify);
-    grunt.file.write(dest, data);
-  }
 };

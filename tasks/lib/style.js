@@ -25,7 +25,7 @@ exports.init = function(grunt) {
     if (!options.debug) {
       return;
     }
-    var dest = dest.replace(/\.js$/, '-debug.js');
+    dest = dest.replace(/\.js$/, '-debug.js');
     grunt.log.writeln('Creating debug file: ' + dest);
 
     data = ast.modify(data, function(v) {
@@ -33,10 +33,10 @@ exports.init = function(grunt) {
     });
     data = data.print_to_string(options.uglify);
     grunt.file.write(dest, data);
-  }
+  };
 
   return exports;
-}
+};
 
 
 // helpers
@@ -66,4 +66,4 @@ function css2js(code, id) {
   code = format(tpl, id, code.replace(/\'/g, '\\\''));
 
   return code;
-};
+}

@@ -27,6 +27,7 @@ module.exports = function(grunt) {
       // create a debug file or not
       debug: true,
 
+      // path or object
       pkg: 'package.json',
 
       // define parsers
@@ -43,10 +44,10 @@ module.exports = function(grunt) {
       options.pkg = grunt.file.readJSON(options.pkg);
     }
 
-    // default parsers
+    // default parsers, add more parsers here
     var parsers = {
       '.js': jsParser,
-      '.css': cssParser,
+      '.css': [css2jsParser],
     };
 
     var fname, destfile;
@@ -124,7 +125,7 @@ module.exports = function(grunt) {
     grunt.file.write(dest, data);
   }
 
-  function cssParser(fileObj, options) {
+  function css2jsParser(fileObj, options) {
     // transport css to js
     var data = grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(

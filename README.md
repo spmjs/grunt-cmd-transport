@@ -74,6 +74,10 @@ Type: `Object`
 Uglify prettifier, you really don't have to change this value.
 
 
+#### options.parsers
+
+Transport a specific filetype with the right parser.
+
 ### Usage Examples
 
 Gruntfile use default options.

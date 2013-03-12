@@ -11,11 +11,17 @@ var path = require('path');
 var cmd = require('cmd-util');
 var ast = cmd.ast;
 var iduri = cmd.iduri;
-var css = require('./lib/css');
 
 module.exports = function(grunt) {
 
   var dependency = require('./lib/dependency').init(grunt);
+  var css = require('./lib/css').init(grunt);
+
+  // default parsers, add more parsers here
+  var parsers = {
+    '.js': jsParser,
+    '.css': [css.css2jsParser],
+  };
 
   var data, astCache;
   grunt.registerMultiTask('transport', 'Transport everything into cmd.', function() {
@@ -43,12 +49,6 @@ module.exports = function(grunt) {
     if (grunt.util._.isString(options.pkg)) {
       options.pkg = grunt.file.readJSON(options.pkg);
     }
-
-    // default parsers, add more parsers here
-    var parsers = {
-      '.js': jsParser,
-      '.css': [css2jsParser],
-    };
 
     var fname, destfile;
     this.files.forEach(function(fileObj) {
@@ -122,31 +122,6 @@ module.exports = function(grunt) {
       return v + '-debug';
     });
     data = astCache.print_to_string(options.uglify);
-    grunt.file.write(dest, data);
-  }
-
-  function css2jsParser(fileObj, options) {
-    // transport css to js
-    var data = grunt.file.read(fileObj.src);
-    var id = iduri.idFromPackage(
-      options.pkg, fileObj.name, options.format
-    ) + '.js';
-
-    data = css(data, id);
-    data = ast.getAst(data).print_to_string(options.uglify);
-    var dest = fileObj.dest + '.js';
-    grunt.file.write(dest, data);
-
-    if (!options.debug) {
-      return;
-    }
-    var dest = dest.replace(/\.js$/, '-debug.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
-
-    data = ast.modify(data, function(v) {
-      return v + '-debug';
-    });
-    data = data.print_to_string(options.uglify);
     grunt.file.write(dest, data);
   }
 };

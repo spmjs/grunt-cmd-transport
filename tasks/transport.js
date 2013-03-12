@@ -30,11 +30,7 @@ module.exports = function(grunt) {
       pkg: 'package.json',
 
       // define parsers
-      filetypes: {
-        '.js': 'javascript',
-        '.css': 'css',
-        '.tpl': 'handlebars'
-      },
+      parsers: {},
 
       // output beautifier
       uglify: {
@@ -47,7 +43,13 @@ module.exports = function(grunt) {
       options.pkg = grunt.file.readJSON(options.pkg);
     }
 
-    var id, fname, destfile, debugfile, data;
+    // default parsers
+    var parsers = {
+      '.js': jsParser,
+      '.css': cssParser,
+    };
+
+    var fname, destfile;
     this.files.forEach(function(fileObj) {
       fileObj.src.forEach(function(fpath) {
 
@@ -59,74 +61,91 @@ module.exports = function(grunt) {
         } else {
           fname = path.relative(fileObj.orig.cwd, fpath);
         }
+        destfile = path.join(fileObj.dest, fname);
 
+        // fpath, fname, dest
         var extname = path.extname(fpath);
-        var type = options.filetypes[extname];
-        if (!type) {
+
+        var fileparsers = options.parsers[extname] || parsers[extname];
+        if (!fileparsers || fileparsers.length === 0) {
+          grunt.file.copy(fpath, destfile);
           return;
         }
-
-        destfile = path.join(fileObj.dest, fname);
-        if (extname !== '.js') {
-          destfile += '.js';
+        if (!Array.isArray(fileparsers)) {
+          fileparsers = [fileparsers];
         }
-        debugfile = destfile.replace(/\.js$/, '-debug.js');
-        grunt.log.writeln('Transporting "' + fpath + '" => ' + destfile);
-
-        id = iduri.idFromPackage(options.pkg, fname, options.format);
-        data = grunt.file.read(fpath);
-
-        if (type === 'javascript') {
-          // transport pure js
-          astCache = ast.getAst(data);
-
-          if (ast.parseFirst(astCache).id) {
-            grunt.log.warn('found id in "' + fpath + '"');
-            grunt.file.write(destfile, data);
-            return;
-          }
-          var deps = dependency.get(fpath, options);
-          if (deps.length) {
-            grunt.log.writeln('found dependencies ' + deps);
-          } else {
-            grunt.log.writeln('found no dependencies');
-          }
-
-          astCache = ast.modify(astCache, {
-            id: id,
-            dependencies: deps,
-            require: function(v) {
-              return iduri.parseAlias(options.pkg, v);
-            }
-          });
-          data = astCache.print_to_string(options.uglify);
-          grunt.file.write(destfile, data);
-
-          createDebug(astCache);
-
-        } else if (type === 'css') {
-          // transport css to js
-          data = css(data, id);
-          data = ast.getAst(data).print_to_string(options.uglify);
-          grunt.file.write(destfile, data);
-          createDebug(data);
-        } else if (type === 'handlebars') {
-        }
-
-        function createDebug(data) {
-          if (!options.debug) {
-            return;
-          }
-          grunt.log.writeln('Creating debug file: ' + debugfile);
-
-          data = ast.modify(data, function(v) {
-            return v + '-debug';
-          });
-          data = data.print_to_string(options.uglify);
-          grunt.file.write(debugfile, data);
-        }
-
+        fileparsers.forEach(function(fn) {
+          fn({
+            src: fpath,
+            name: fname,
+            dest: destfile
+          }, options);
+        });
       });
     });
   });
+
+  function jsParser(fileObj, options) {
+    var data = grunt.file.read(fileObj.src);
+    var astCache = ast.getAst(data);
+
+    if (ast.parseFirst(astCache).id) {
+      grunt.log.warn('found id in "' + fileObj.src + '"');
+      grunt.file.write(fileObj.dest, data);
+      return;
+    }
+    var deps = dependency.get(fileObj.src, options);
+    if (deps.length) {
+      grunt.log.writeln('found dependencies ' + deps);
+    } else {
+      grunt.log.writeln('found no dependencies');
+    }
+
+    astCache = ast.modify(astCache, {
+      id: iduri.idFromPackage(options.pkg, fileObj.name, options.format),
+      dependencies: deps,
+      require: function(v) {
+        return iduri.parseAlias(options.pkg, v);
+      }
+    });
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(fileObj.dest, data);
+
+    if (!options.debug) {
+      return;
+    }
+    var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
+    grunt.log.writeln('Creating debug file: ' + dest);
+
+    astCache = ast.modify(data, function(v) {
+      return v + '-debug';
+    });
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(dest, data);
+  }
+
+  function cssParser(fileObj, options) {
+    // transport css to js
+    var data = grunt.file.read(fileObj.src);
+    var id = iduri.idFromPackage(
+      options.pkg, fileObj.name, options.format
+    );
+
+    data = css(data, id);
+    data = ast.getAst(data).print_to_string(options.uglify);
+    var dest = fileObj.dest + '.js';
+    grunt.file.write(dest, data);
+
+    if (!options.debug) {
+      return;
+    }
+    var dest = dest.replace(/\.js$/, '-debug.js');
+    grunt.log.writeln('Creating debug file: ' + dest);
+
+    data = ast.modify(data, function(v) {
+      return v + '-debug';
+    });
+    data = data.print_to_string(options.uglify);
+    grunt.file.write(dest, data);
+  }
 };

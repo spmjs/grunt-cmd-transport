@@ -129,7 +129,7 @@ module.exports = function(grunt) {
     var data = grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(
       options.pkg, fileObj.name, options.format
-    );
+    ) + '.js';
 
     data = css(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);

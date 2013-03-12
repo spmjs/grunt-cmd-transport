@@ -1,6 +1,3 @@
-// transform css to js
-// spmjs/spm#581
-
 var format = require('util').format;
 var cleancss = require('clean-css');
 var ast = require('cmd-util').ast;
@@ -35,13 +32,18 @@ exports.init = function(grunt) {
     grunt.file.write(dest, data);
   };
 
+  // the real css parser
+  exports.cssParser = function(fileObj, options) {
+  };
+
   return exports;
 };
 
 
 // helpers
 function css2js(code, id) {
-
+  // transform css to js
+  // spmjs/spm#581
   var tpl = [
     'define("%s", [], function() {',
     'function importStyle(cssText) {',

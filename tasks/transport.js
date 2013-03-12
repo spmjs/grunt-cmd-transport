@@ -62,6 +62,10 @@ module.exports = function(grunt) {
         } else {
           fname = path.relative(fileObj.orig.cwd, fpath);
         }
+        if (grunt.file.isDir(fpath)) {
+          grunt.file.mkdir(fpath);
+          return;
+        }
         destfile = path.join(fileObj.dest, fname);
 
         // fpath, fname, dest

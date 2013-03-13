@@ -21,4 +21,10 @@ exports.css = {
     test.equal(parsed.id, 'cmd/css/1.0.0/simple.css.js', 'should get the rgith id');
     test.done();
   },
+  alias: function(test) {
+    var actual = grunt.file.read('tmp/css/alias-debug.css');
+    var expected = actual.indexOf('{% import "alice/button/1.0.0/button-debug.css" %}');
+    test.notEqual(expected, -1);
+    test.done();
+  }
 };

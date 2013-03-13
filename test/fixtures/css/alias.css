@@ -1,0 +1,6 @@
+@import url('button');
+@import url('./ie8.css');
+
+.alias {
+  color: red;
+}

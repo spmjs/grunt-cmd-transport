@@ -48,7 +48,12 @@ module.exports = function(grunt) {
           pkg: {
             family: 'cmd',
             name: 'css',
-            version: '1.0.0'
+            version: '1.0.0',
+            spm: {
+              alias: {
+                'button': 'alice/button/1.0.0/button'
+              }
+            }
           }
         },
         files: [{

@@ -34,6 +34,51 @@ exports.init = function(grunt) {
 
   // the real css parser
   exports.cssParser = function(fileObj, options) {
+    // transport css to something like
+    // /*! {% define "id" %} */
+    // /*! {% import "dependency" %} */
+
+    var data = grunt.file.read(fileObj.src);
+
+    var lines = data.split(/\r\n|\r|\n/);
+    var regex = /^@import\s+url\(([^;\n]+)\);\s*$/;
+    lines = lines.map(function(line) {
+      var m = line.match(regex);
+      if (!m) return line;
+      var dep = m[1];
+      dep = dep.replace(/^('|")/, '');
+      dep = dep.replace(/('|")$/, '');
+
+      if (dep.charAt(0) !== '.' && !iduri.isAlias(options.pkg, dep)) {
+        grunt.log.warn('alias ' + dep + ' not defined.');
+      } else {
+        dep = iduri.parseAlias(options.pkg, dep);
+      }
+
+      return format('/*! {% import "%s" %} */', dep);
+    });
+
+    data = lines.join(grunt.util.linefeed);
+
+    var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format);
+    id = format('/*! {% define "%s" %} */', id)
+    data = [id, data].join(grunt.util.linefeed);
+    grunt.file.write(fileObj.dest, data);
+
+    // create a debug file
+    lines = data.split(/\r\n|\r|\n/);
+    regex = /^(\/\*\!\s*\{%\s*\w+\s+)(\'|\")(.*?)\2(\s*%\}\s*\*\/)$/;
+    lines = lines.map(function(line) {
+      var m = line.match(regex);
+      if (!m) return line;
+      line = line.replace(regex, function(m, m1, m2, m3, m4) {
+        return m1 + m2 + m3.replace(/(\.css)?$/, '-debug.css') + m2 + m4;
+      });
+      return line;
+    });
+    data = lines.join(grunt.util.linefeed);
+    var dest = fileObj.dest.replace(/\.css$/, '-debug.css');
+    grunt.file.write(dest, data);
   };
 
   return exports;

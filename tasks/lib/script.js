@@ -50,7 +50,7 @@ exports.init = function(grunt) {
   // ----------------
   function moduleDependencies(id, options) {
     if (!iduri.isAlias(options.pkg, id)) {
-      grunt.log.warn('alias not defined.');
+      grunt.log.warn('alias ' + id + ' not defined.');
       return [];
     }
     var alias = iduri.parseAlias(options.pkg, id);

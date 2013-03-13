@@ -20,7 +20,7 @@ module.exports = function(grunt) {
   // default parsers, add more parsers here
   var parsers = {
     '.js': [script.jsParser],
-    '.css': [style.css2jsParser],
+    '.css': [style.cssParser, style.css2jsParser],
   };
 
   var data, astCache;

@@ -6,16 +6,16 @@
  * Licensed under the MIT license.
  */
 
-
-var path = require('path');
-var cmd = require('cmd-util');
-var ast = cmd.ast;
-var iduri = cmd.iduri;
-
 module.exports = function(grunt) {
+  var path = require('path');
+  var cmd = require('cmd-util');
+  var ast = cmd.ast;
+  var iduri = cmd.iduri;
+
 
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
+  var template = require('./lib/template').init(grunt);
 
   var data, astCache;
 
@@ -34,8 +34,13 @@ module.exports = function(grunt) {
       // define parsers
       parsers: {
         '.js': [script.jsParser],
-        '.css': [style.cssParser]
+        '.css': [style.cssParser],
+        '.tpl': [template.handlebarsParser]
       },
+
+      // for handlebars
+      knownHelpers: [],
+      knownHelpersOnly: false,
 
       // output beautifier
       uglify: {

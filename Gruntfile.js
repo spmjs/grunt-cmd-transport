@@ -61,6 +61,25 @@ module.exports = function(grunt) {
           src: '*.css',
           dest: 'tmp/css'
         }]
+      },
+      tpl: {
+        options: {
+          pkg: {
+            family: 'cmd',
+            name: 'css',
+            version: '1.0.0',
+            spm: {
+              alias: {
+                'handlebars': 'gallery/1.0.0/handlebars'
+              }
+            }
+          }
+        },
+        files: [{
+          cwd: 'test/fixtures/template',
+          src: '*.tpl',
+          dest: 'tmp/template'
+        }]
       }
     },
 

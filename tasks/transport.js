@@ -17,13 +17,8 @@ module.exports = function(grunt) {
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
 
-  // default parsers, add more parsers here
-  var parsers = {
-    '.js': [script.jsParser],
-    '.css': [style.cssParser, style.css2jsParser],
-  };
-
   var data, astCache;
+
   grunt.registerMultiTask('transport', 'Transport everything into cmd.', function() {
 
     var options = this.options({
@@ -37,7 +32,10 @@ module.exports = function(grunt) {
       pkg: 'package.json',
 
       // define parsers
-      parsers: {},
+      parsers: {
+        '.js': [script.jsParser],
+        '.css': [style.cssParser]
+      },
 
       // output beautifier
       uglify: {
@@ -71,7 +69,7 @@ module.exports = function(grunt) {
         // fpath, fname, dest
         var extname = path.extname(fpath);
 
-        var fileparsers = options.parsers[extname] || parsers[extname];
+        var fileparsers = options.parsers[extname];
         if (!fileparsers || fileparsers.length === 0) {
           grunt.file.copy(fpath, destfile);
           return;

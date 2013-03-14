@@ -1,11 +1,11 @@
 var format = require('util').format;
-var cleancss = require('clean-css');
-var ast = require('cmd-util').ast;
-var iduri = require('cmd-util').iduri;
-var css = require('cmd-util').css;
-
 
 exports.init = function(grunt) {
+  var ast = require('cmd-util').ast;
+  var iduri = require('cmd-util').iduri;
+  var css = require('cmd-util').css;
+
+
   var exports = {};
 
   exports.css2jsParser = function(fileObj, options) {
@@ -90,6 +90,7 @@ exports.init = function(grunt) {
 
 // helpers
 function css2js(code, id) {
+  var cleancss = require('clean-css');
   // transform css to js
   // spmjs/spm#581
   var tpl = [

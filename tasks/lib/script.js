@@ -1,8 +1,9 @@
-var path = require('path');
-var ast = require('cmd-util').ast;
-var iduri = require('cmd-util').iduri;
-
 exports.init = function(grunt) {
+  var path = require('path');
+  var ast = require('cmd-util').ast;
+  var iduri = require('cmd-util').iduri;
+
+
   var exports = {};
 
   exports.jsParser = function(fileObj, options) {

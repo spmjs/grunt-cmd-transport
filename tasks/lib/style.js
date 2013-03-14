@@ -2,6 +2,7 @@ var format = require('util').format;
 var cleancss = require('clean-css');
 var ast = require('cmd-util').ast;
 var iduri = require('cmd-util').iduri;
+var css = require('cmd-util').css;
 
 
 exports.init = function(grunt) {
@@ -34,51 +35,53 @@ exports.init = function(grunt) {
 
   // the real css parser
   exports.cssParser = function(fileObj, options) {
-    // transport css to something like
-    // /*! {% define "id" %} */
-    // /*! {% import "dependency" %} */
-
     var data = grunt.file.read(fileObj.src);
+    data = css.parse(data);
 
-    var lines = data.split(/\r\n|\r|\n/);
-    var regex = /^@import\s+url\(([^;\n]+)\);\s*$/;
-    lines = lines.map(function(line) {
-      var m = line.match(regex);
-      if (!m) return line;
-      var dep = m[1];
-      dep = dep.replace(/^('|")/, '');
-      dep = dep.replace(/('|")$/, '');
-
-      if (dep.charAt(0) !== '.' && !iduri.isAlias(options.pkg, dep)) {
-        grunt.log.warn('alias ' + dep + ' not defined.');
-      } else {
-        dep = iduri.parseAlias(options.pkg, dep);
+    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+    var ret = css.stringify(data[0].code, function(node) {
+      if (node.type === 'import' && node.id) {
+        if (node.id.charAt(0) === '.') {
+          return node;
+        }
+        if (!iduri.isAlias(options.pkg, node.id)) {
+          grunt.log.warn('alias ' + node.id + ' not defined.');
+        } else {
+          node.id = iduri.parseAlias(options.pkg, node.id);
+          if (!/\.css$/.test(node.id)) {
+            node.id += '.css';
+          }
+          return node;
+        }
       }
-
-      return format('/*! {% import "%s" %} */', dep);
     });
-
-    data = lines.join(grunt.util.linefeed);
 
     var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format);
-    id = format('/*! {% define "%s" %} */', id)
-    data = [id, data].join(grunt.util.linefeed);
-    grunt.file.write(fileObj.dest, data);
+    var banner = format('/*! define %s */', id);
+    grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
-    // create a debug file
-    lines = data.split(/\r\n|\r|\n/);
-    regex = /^(\/\*\!\s*\{%\s*\w+\s+)(\'|\")(.*?)\2(\s*%\}\s*\*\/)$/;
-    lines = lines.map(function(line) {
-      var m = line.match(regex);
-      if (!m) return line;
-      line = line.replace(regex, function(m, m1, m2, m3, m4) {
-        return m1 + m2 + m3.replace(/(\.css)?$/, '-debug.css') + m2 + m4;
-      });
-      return line;
-    });
-    data = lines.join(grunt.util.linefeed);
     var dest = fileObj.dest.replace(/\.css$/, '-debug.css');
-    grunt.file.write(dest, data);
+    grunt.log.writeln('Creating debug file: ' + dest);
+
+    ret = css.stringify(data[0].code, function(node) {
+      if (node.type === 'import' && node.id) {
+        var alias = node.id;
+        if (alias.charAt(0) === '.') {
+          node.id = alias.replace(/(\.css)?$/, '-debug.css');
+          return node;
+        }
+        alias = iduri.parseAlias(options.pkg, alias);
+        if (/\.css$/.test(alias)) {
+          node.id = alias.replace(/\.css$/, '-debug.css');
+        } else {
+          node.id = alias + '-debug.css';
+        }
+        return node;
+      }
+    });
+    id = id.replace(/(\.css)?$/, '-debug.css');
+    banner = format('/*! define %s */', id);
+    grunt.file.write(dest, [banner, ret].join('\n'));
   };
 
   return exports;

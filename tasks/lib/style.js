@@ -118,3 +118,5 @@ function css2js(code, id) {
 
   return code;
 }
+
+exports.css2js = css2js;

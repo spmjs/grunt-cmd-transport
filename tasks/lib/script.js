@@ -59,6 +59,7 @@ exports.init = function(grunt) {
     if (alias === id) return [];
 
     var file = iduri.appendext(alias);
+    if (!/\.js$/.test(file)) return [];
 
     var fpath;
     options.paths.some(function(base) {

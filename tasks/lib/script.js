@@ -7,6 +7,7 @@ exports.init = function(grunt) {
   var exports = {};
 
   exports.jsParser = function(fileObj, options) {
+    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     var data = grunt.file.read(fileObj.src);
     var astCache = ast.getAst(data);
 
@@ -40,7 +41,12 @@ exports.init = function(grunt) {
     grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(data, function(v) {
-      return v + '-debug';
+      var ext = path.extname(v);
+      if (ext) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
+      } else {
+        return v + '-debug';
+      }
     });
     data = astCache.print_to_string(options.uglify);
     grunt.file.write(dest, data);
@@ -111,7 +117,12 @@ exports.init = function(grunt) {
           deps = grunt.util._.union(deps, relativeDependencies(id, options, fpath));
         }
       } else if (!moduleDeps[id]) {
-        deps.push(iduri.parseAlias(options.pkg, id));
+        var alias = iduri.parseAlias(options.pkg, id);
+        deps.push(alias);
+
+        // don't parse no javascript dependencies
+        var ext = path.extname(alias);
+        if (ext && ext !== '.js') return;
 
         var mdeps = moduleDependencies(id, options);
         moduleDeps[id] = mdeps;

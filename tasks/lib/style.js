@@ -1,3 +1,4 @@
+var path = require('path');
 var format = require('util').format;
 
 exports.init = function(grunt) {
@@ -9,11 +10,15 @@ exports.init = function(grunt) {
   var exports = {};
 
   exports.css2jsParser = function(fileObj, options) {
+    // don't transport debug css files
+    if (/\-debug\.css$/.test(fileObj.src)) return;
+    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+
     // transport css to js
     var data = grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(
       options.pkg, fileObj.name, options.format
-    ) + '.js';
+    );
 
     data = css2js(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);
@@ -23,11 +28,16 @@ exports.init = function(grunt) {
     if (!options.debug) {
       return;
     }
-    dest = dest.replace(/\.js$/, '-debug.js');
+    dest = dest.replace(/\.css\.js$/, '-debug.css.js');
     grunt.log.writeln('Creating debug file: ' + dest);
 
     data = ast.modify(data, function(v) {
-      return v + '-debug';
+      var ext = path.extname(v);
+      if (ext) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
+      } else {
+        return v + '-debug';
+      }
     });
     data = data.print_to_string(options.uglify);
     grunt.file.write(dest, data);

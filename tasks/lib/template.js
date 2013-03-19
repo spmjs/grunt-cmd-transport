@@ -1,5 +1,6 @@
 exports.init = function(grunt) {
 
+  var path = require('path');
   var format = require('util').format;
   var iduri = require('cmd-util').iduri;
   var ast = require('cmd-util').ast;
@@ -13,7 +14,7 @@ exports.init = function(grunt) {
     var handlebars = require('handlebars');
 
     // id for template
-    var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format) + '.js';
+    var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format);
 
     // handlebars alias
     var alias = iduri.parseAlias(options.pkg, 'handlebars');
@@ -49,11 +50,16 @@ exports.init = function(grunt) {
     if (!options.debug) {
       return;
     }
-    dest = dest.replace(/\.js$/, '-debug.js');
+    dest = dest.replace(/\.tpl\.js$/, '-debug.tpl.js');
     grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {
-      return v + '-debug';
+      var ext = path.extname(v);
+      if (ext) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
+      } else {
+        return v + '-debug';
+      }
     });
     data = astCache.print_to_string(options.uglify);
     grunt.file.write(dest, data);

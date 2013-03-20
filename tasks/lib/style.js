@@ -105,16 +105,7 @@ function css2js(code, id) {
   // spmjs/spm#581
   var tpl = [
     'define("%s", [], function() {',
-    'function importStyle(cssText) {',
-    'var element = document.createElement("style");',
-    'doc.getElementsByTagName("head")[0].appendChild(element);',
-    'if (element.styleSheet) {',
-    'element.styleSheet.cssText = cssText;',
-    '} else {',
-    'element.appendChild(doc.createTextNode(cssText));',
-    '}',
-    '}',
-    "importStyle('%s')",
+    "seajs.importStyle('%s')",
     '});'
   ].join('\n');
 
@@ -123,9 +114,11 @@ function css2js(code, id) {
     removeEmpty: true
   });
   // spmjs/spm#651
-  code = code.replace(/\\0/g, '\\\\0');
-  code = format(tpl, id, code.replace(/\'/g, '\\\''));
+  code = code.split(/\r\n|\r|\n/).map(function(line) {
+    return line.replace(/\\/g, '\\\\');
+  }).join('\n');
 
+  code = format(tpl, id, code.replace(/\'/g, '\\\''));
   return code;
 }
 

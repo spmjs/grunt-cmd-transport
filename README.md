@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-This plugin requires Grunt `~0.4.0`
+This plugin requires Grunt `~0.4.1`
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -12,7 +12,7 @@ If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out th
 npm install grunt-cmd-transport --save-dev
 ```
 
-One the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
+Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
 grunt.loadNpmTasks('grunt-cmd-transport');
@@ -78,6 +78,18 @@ Uglify prettifier, you really don't have to change this value.
 
 Transport a specific filetype with the right parser.
 
+You can write your own parsers, for example `coffeeParser`:
+
+```js
+options: {
+    parsers: {
+        '.coffee': [coffeeParser]
+    }
+}
+```
+
+Sorry for the missing documentation on how to write a parser.
+
 ### Usage Examples
 
 Gruntfile use default options.
@@ -123,3 +135,6 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**2013-03-22** `0.1.0b1`
+
+First beta version.

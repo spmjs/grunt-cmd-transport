@@ -50,7 +50,7 @@ exports.init = function(grunt) {
     if (!options.debug) {
       return;
     }
-    dest = dest.replace(/\.tpl\.js$/, '-debug.tpl.js');
+    dest = dest.replace(/\.handlebars\.js$/, '-debug.handlebars.js');
     grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {

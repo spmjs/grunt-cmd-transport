@@ -16,9 +16,9 @@ exports.chain = {
 
 exports.css = {
   simple: function(test) {
-    var actual = grunt.file.read('tmp/css/simple.css.js');
+    var actual = grunt.file.read('tmp/css/simple-debug.css.js');
     var parsed = ast.parseFirst(actual);
-    test.equal(parsed.id, 'cmd/css/1.0.0/simple.css.js', 'should get the rgith id');
+    test.equal(parsed.id, 'cmd/css/1.0.0/simple-debug.css', 'should get the rgith id');
     test.done();
   },
   alias: function(test) {

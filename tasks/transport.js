@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       parsers: {
         '.js': [script.jsParser],
         '.css': [style.cssParser],
-        '.tpl': [template.handlebarsParser]
+        '.handlebars': [template.handlebarsParser]
       },
 
       // for handlebars

@@ -9,6 +9,8 @@
 
 module.exports = function(grunt) {
 
+  var style = require('./').style.init(grunt);
+
   grunt.initConfig({
     jshint: {
       all: [
@@ -45,6 +47,9 @@ module.exports = function(grunt) {
       },
       css: {
         options: {
+          parsers: {
+            '.css': [style.cssParser, style.css2jsParser],
+          },
           pkg: {
             family: 'cmd',
             name: 'css',
@@ -62,7 +67,7 @@ module.exports = function(grunt) {
           dest: 'tmp/css'
         }]
       },
-      tpl: {
+      handlebars: {
         options: {
           pkg: {
             family: 'cmd',
@@ -77,7 +82,7 @@ module.exports = function(grunt) {
         },
         files: [{
           cwd: 'test/fixtures/template',
-          src: '*.tpl',
+          src: '*.handlebars',
           dest: 'tmp/template'
         }]
       }

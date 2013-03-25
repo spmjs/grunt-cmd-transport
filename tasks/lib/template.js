@@ -38,6 +38,7 @@ exports.init = function(grunt) {
     if (options.knownData) {
       props.data = true;
     }
+    patchHandlebars(handlebars);
     var code = handlebars.precompile(data, props);
 
     var ret = format(template, id, alias, alias, code);
@@ -67,3 +68,38 @@ exports.init = function(grunt) {
 
   return exports;
 };
+
+
+// patch for handlebars
+function patchHandlebars(Handlebars) {
+  Handlebars.JavaScriptCompiler.prototype.preamble = function() {
+    var out = [];
+
+    if (!this.isChild) {
+      var namespace = this.namespace;
+      // patch for handlebars
+      var copies = [
+        "helpers = helpers || {};",
+        "for (var key in " + namespace + ".helpers) {",
+        "   helpers[key] = helpers[key] || " + namespace + ".helpers[key];",
+        "}"
+      ].join('\n');
+      if (this.environment.usePartial) { copies = copies + " partials = partials || " + namespace + ".partials;"; }
+      if (this.options.data) { copies = copies + " data = data || {};"; }
+      out.push(copies);
+    } else {
+      out.push('');
+    }
+
+    if (!this.environment.isSimple) {
+      out.push(", buffer = " + this.initializeBuffer());
+    } else {
+      out.push("");
+    }
+
+    // track the last context pushed into place to allow skipping the
+    // getContext opcode when it would be a noop
+    this.lastContext = 0;
+    this.source = out;
+  }
+}

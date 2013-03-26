@@ -50,7 +50,11 @@ module.exports = function(grunt) {
     });
 
     if (grunt.util._.isString(options.pkg)) {
-      options.pkg = grunt.file.readJSON(options.pkg);
+      if (grunt.file.exists(options.pkg)) {
+        options.pkg = grunt.file.readJSON(options.pkg);
+      } else {
+        options.pkg = {};
+      }
     }
 
     var fname, destfile;

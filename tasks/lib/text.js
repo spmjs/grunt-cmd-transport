@@ -47,7 +47,7 @@ exports.init = function(grunt) {
 
 // helpers
 function html2js(code, id) {
-  var tpl = 'define("%s", [], "%s");'
+  var tpl = 'define("%s", [], "%s");';
 
   code = code.split(/\r\n|\r|\n/).map(function(line) {
     return line.replace(/\\/g, '\\\\');

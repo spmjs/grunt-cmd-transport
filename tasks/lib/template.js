@@ -101,5 +101,5 @@ function patchHandlebars(Handlebars) {
     // getContext opcode when it would be a noop
     this.lastContext = 0;
     this.source = out;
-  }
+  };
 }

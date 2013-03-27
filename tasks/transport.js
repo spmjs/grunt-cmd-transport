@@ -13,6 +13,7 @@ module.exports = function(grunt) {
   var iduri = cmd.iduri;
 
 
+  var text = require('./lib/text').init(grunt);
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
   var template = require('./lib/template').init(grunt);
@@ -35,6 +36,7 @@ module.exports = function(grunt) {
       parsers: {
         '.js': [script.jsParser],
         '.css': [style.cssParser],
+        '.html': [text.html2jsParser],
         '.handlebars': [template.handlebarsParser]
       },
 

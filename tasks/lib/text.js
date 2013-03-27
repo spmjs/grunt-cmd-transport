@@ -40,6 +40,8 @@ exports.init = function(grunt) {
     data = data.print_to_string(options.uglify);
     grunt.file.write(dest, data);
   };
+
+  return exports;
 };
 
 

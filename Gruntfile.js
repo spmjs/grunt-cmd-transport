@@ -85,6 +85,20 @@ module.exports = function(grunt) {
           src: '*.handlebars',
           dest: 'tmp/template'
         }]
+      },
+      html: {
+        options: {
+          pkg: {
+            family: 'cmd',
+            name: 'html',
+            version: '1.0.0',
+          }
+        },
+        files: [{
+          cwd: 'test/fixtures/text',
+          src: '*.html',
+          dest: 'tmp/text'
+        }]
       }
     },
 

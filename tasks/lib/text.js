@@ -8,11 +8,10 @@ exports.init = function(grunt) {
   var exports = {};
 
   exports.html2jsParser = function(fileObj, options) {
-    // don't transport debug css files
+    // don't transport debug html files
     if (/\-debug\.html/.test(fileObj.src)) return;
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
-
-    // transport css to js
+    // transport html to js
     var data = grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(
       options.pkg, fileObj.name, options.format

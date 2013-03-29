@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "clean-css": "~0.10.1",
-    "cmd-util": "~0.3.3",
+    "cmd-util": "~0.3.4",
     "handlebars": "~1.0.10",
     "uglify-js": "~2.2.5"
   },

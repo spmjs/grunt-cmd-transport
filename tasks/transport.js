@@ -29,6 +29,9 @@ module.exports = function(grunt) {
       // create a debug file or not
       debug: true,
 
+      // process a template or not
+      process: false,
+
       // path or object
       pkg: 'package.json',
 
@@ -57,6 +60,10 @@ module.exports = function(grunt) {
       } else {
         options.pkg = {};
       }
+    }
+
+    if (options.process === true) {
+      options.process = {};
     }
 
     var fname, destfile;
@@ -89,7 +96,9 @@ module.exports = function(grunt) {
           fileparsers = [fileparsers];
         }
         var srcData = grunt.file.read(fpath);
-        srcData = grunt.template.process(srcData);
+        if (options.process) {
+          srcData = grunt.template.process(srcData, options.process);
+        }
         fileparsers.forEach(function(fn) {
           fn({
             src: fpath,

@@ -28,6 +28,11 @@ module.exports = function(grunt) {
     },
 
     transport: {
+      options: {
+        process: {
+          data: {pkg: {version: '1.0.0'}}
+        }
+      },
       // test for chain
       chain: {
         options: {

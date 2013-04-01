@@ -69,7 +69,7 @@ module.exports = function(grunt) {
           fname = fpath;
           fpath = path.join(fileObj.cwd, fpath);
         } else {
-          fname = path.relative(fileObj.orig.cwd, fpath);
+          fname = path.relative(fileObj.orig.cwd || '', fpath);
         }
         if (grunt.file.isDir(fpath)) {
           grunt.file.mkdir(fpath);

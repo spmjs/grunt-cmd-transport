@@ -88,9 +88,12 @@ module.exports = function(grunt) {
         if (!Array.isArray(fileparsers)) {
           fileparsers = [fileparsers];
         }
+        var srcData = grunt.file.read(fpath);
+        srcData = grunt.template.process(srcData);
         fileparsers.forEach(function(fn) {
           fn({
             src: fpath,
+            srcData: srcData,
             name: fname,
             dest: destfile
           }, options);

@@ -8,7 +8,7 @@ exports.init = function(grunt) {
 
   exports.jsParser = function(fileObj, options) {
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
-    var data = grunt.file.read(fileObj.src);
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var astCache = ast.getAst(data);
 
     if (ast.parseFirst(astCache).id) {

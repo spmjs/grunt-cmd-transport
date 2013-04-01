@@ -12,7 +12,7 @@ exports.init = function(grunt) {
     if (/\-debug\.html/.test(fileObj.src)) return;
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     // transport html to js
-    var data = grunt.file.read(fileObj.src);
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(
       options.pkg, fileObj.name, options.format
     );

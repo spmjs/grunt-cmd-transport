@@ -15,7 +15,7 @@ exports.init = function(grunt) {
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
 
     // transport css to js
-    var data = grunt.file.read(fileObj.src);
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var id = iduri.idFromPackage(
       options.pkg, fileObj.name, options.format
     );
@@ -45,7 +45,7 @@ exports.init = function(grunt) {
 
   // the real css parser
   exports.cssParser = function(fileObj, options) {
-    var data = grunt.file.read(fileObj.src);
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
     data = css.parse(data);
 
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);

@@ -29,7 +29,7 @@ exports.init = function(grunt) {
       '})'
     ].join('\n');
 
-    var data = grunt.file.read(fileObj.src);
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
 
     // compile code
     var props = {};

@@ -1,7 +1,7 @@
 {
   "name": "grunt-cmd-transport",
   "description": "Transport javascript into cmd.",
-  "version": "0.1.0b2",
+  "version": "0.1.0",
   "homepage": "https://github.com/spmjs/grunt-cmd-transport",
   "author": {
     "name": "Hsiaoming Yang",

@@ -11,7 +11,15 @@ exports.init = function(grunt) {
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var astCache = ast.getAst(data);
 
-    if (ast.parseFirst(astCache).id) {
+    var meta = ast.parseFirst(astCache);
+
+    if (!meta) {
+      grunt.log.warn('found non cmd module "' + fileObj.src + '"');
+      // do nothing
+      return;
+    }
+
+    if (meta.id) {
       grunt.log.warn('found id in "' + fileObj.src + '"');
       grunt.file.write(fileObj.dest, data);
       return;

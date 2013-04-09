@@ -104,6 +104,20 @@ module.exports = function(grunt) {
           src: '*.html',
           dest: 'tmp/text'
         }]
+      },
+      nested: {
+        options: {
+          pkg: {
+            family: 'cmd',
+            name: 'nested',
+            version: '1.0.0',
+          }
+        },
+        files: [{
+          cwd: 'test/fixtures/nested',
+          src: '**/*.js',
+          dest: 'tmp/nested'
+        }]
       }
     },
 

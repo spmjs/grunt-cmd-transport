@@ -24,7 +24,7 @@ exports.init = function(grunt) {
       grunt.file.write(fileObj.dest, data);
       return;
     }
-    var deps = relativeDependencies(fileObj.src, options);
+    var deps = parseDependencies(fileObj.src, options);
 
     if (deps.length) {
       grunt.log.writeln('found dependencies ' + deps);
@@ -107,37 +107,54 @@ exports.init = function(grunt) {
     return deps;
   }
 
-  function relativeDependencies(fpath, options, basefile) {
-    if (basefile) {
-      fpath = path.join(path.dirname(basefile), fpath);
-    }
-    fpath = iduri.appendext(fpath);
+  function parseDependencies(fpath, options) {
+    var rootpath = fpath;
 
-    var deps = [];
-    var moduleDeps = {};
-
-    var data = grunt.file.read(fpath);
-    var parsed = ast.parseFirst(data);
-    parsed.dependencies.forEach(function(id) {
-      if (id.charAt(0) === '.') {
-        deps.push(id);
-        if (/\.js$/.test(iduri.appendext(id))) {
-          deps = grunt.util._.union(deps, relativeDependencies(id, options, fpath));
-        }
-      } else if (!moduleDeps[id]) {
-        var alias = iduri.parseAlias(options.pkg, id);
-        deps.push(alias);
-
-        // don't parse no javascript dependencies
-        var ext = path.extname(alias);
-        if (ext && ext !== '.js') return;
-
-        var mdeps = moduleDependencies(id, options);
-        moduleDeps[id] = mdeps;
-        deps = grunt.util._.union(deps, mdeps);
+    function relativeDependencies(fpath, options, basefile) {
+      if (basefile) {
+        fpath = path.join(path.dirname(basefile), fpath);
       }
-    });
-    return deps;
+      fpath = iduri.appendext(fpath);
+
+      var deps = [];
+      var moduleDeps = {};
+
+      var data = grunt.file.read(fpath);
+      var parsed = ast.parseFirst(data);
+      parsed.dependencies.forEach(function(id) {
+
+        if (id.charAt(0) === '.') {
+          // fix nested relative dependencies
+          if (basefile) {
+            var altId = path.join(path.dirname(fpath), id);
+            altId = path.relative(path.dirname(rootpath), altId);
+            if (altId.charAt(0) !== '.') {
+              altId = './' + altId;
+            }
+            deps.push(altId);
+          } else {
+            deps.push(id);
+          }
+          if (/\.js$/.test(iduri.appendext(id))) {
+            deps = grunt.util._.union(deps, relativeDependencies(id, options, fpath));
+          }
+        } else if (!moduleDeps[id]) {
+          var alias = iduri.parseAlias(options.pkg, id);
+          deps.push(alias);
+
+          // don't parse no javascript dependencies
+          var ext = path.extname(alias);
+          if (ext && ext !== '.js') return;
+
+          var mdeps = moduleDependencies(id, options);
+          moduleDeps[id] = mdeps;
+          deps = grunt.util._.union(deps, mdeps);
+        }
+      });
+      return deps;
+    }
+
+    return relativeDependencies(fpath, options);
   }
 
   return exports;

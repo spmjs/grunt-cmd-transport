@@ -135,6 +135,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**April 9th, 2013** `0.1.2`
+
+Bugfix for parsing nested relative dependencies.
+
 **April 1st, 2013** `0.1.1`
 
 Template process on source data.

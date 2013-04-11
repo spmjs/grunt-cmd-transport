@@ -58,6 +58,21 @@ module.exports = function(grunt) {
           src: '*',
           dest: 'tmp/rely'
         }]
+      },
+
+      // reply on other modules (with alias)
+      alias: {
+        options: {
+          paths: ['assets'],
+          alias: {
+            'foo': 'arale/class/foo'
+          }
+        },
+        files: [{
+          cwd: 'alias',
+          src: '*',
+          dest: 'tmp/alias'
+        }]
       }
     }
   });

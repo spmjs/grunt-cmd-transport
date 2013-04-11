@@ -97,6 +97,24 @@ module.exports = function(grunt) {
           src: '*.css',
           dest: 'tmp/css'
         }]
+      },
+
+      // parsing html into js
+      text: {
+        files: [{
+          cwd: 'text',
+          src: '*.html',
+          dest: 'tmp/text'
+        }]
+      },
+
+      // parsing handlebars into js
+      handlebars: {
+        files: [{
+          cwd: 'handlebars',
+          src: '*',
+          dest: 'tmp/handlebars'
+        }]
       }
     }
   });

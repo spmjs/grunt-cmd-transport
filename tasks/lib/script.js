@@ -33,10 +33,10 @@ exports.init = function(grunt) {
     }
 
     astCache = ast.modify(astCache, {
-      id: iduri.idFromPackage(options.pkg, fileObj.name, options.format),
+      id: options.idleading + fileObj.name.replace(/\.js$/, ''),
       dependencies: deps,
       require: function(v) {
-        return iduri.parseAlias(options.pkg, v);
+        return iduri.parseAlias(options, v);
       }
     });
     data = astCache.print_to_string(options.uglify);
@@ -64,11 +64,11 @@ exports.init = function(grunt) {
   // helpers
   // ----------------
   function moduleDependencies(id, options) {
-    if (!iduri.isAlias(options.pkg, id)) {
+    if (!iduri.isAlias(options, id)) {
       grunt.log.warn('alias ' + id + ' not defined.');
       return [];
     }
-    var alias = iduri.parseAlias(options.pkg, id);
+    var alias = iduri.parseAlias(options, id);
     // usually this is "$"
     if (alias === id) return [];
 
@@ -139,7 +139,7 @@ exports.init = function(grunt) {
             deps = grunt.util._.union(deps, relativeDependencies(id, options, fpath));
           }
         } else if (!moduleDeps[id]) {
-          var alias = iduri.parseAlias(options.pkg, id);
+          var alias = iduri.parseAlias(options, id);
           deps.push(alias);
 
           // don't parse no javascript dependencies

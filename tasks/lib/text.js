@@ -13,9 +13,7 @@ exports.init = function(grunt) {
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     // transport html to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var id = iduri.idFromPackage(
-      options.pkg, fileObj.name, options.format
-    );
+    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
 
     data = html2js(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);

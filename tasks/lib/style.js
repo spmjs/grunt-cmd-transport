@@ -16,9 +16,7 @@ exports.init = function(grunt) {
 
     // transport css to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var id = iduri.idFromPackage(
-      options.pkg, fileObj.name, options.format
-    );
+    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
 
     data = css2js(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);
@@ -54,10 +52,10 @@ exports.init = function(grunt) {
         if (node.id.charAt(0) === '.') {
           return node;
         }
-        if (!iduri.isAlias(options.pkg, node.id)) {
+        if (!iduri.isAlias(options, node.id)) {
           grunt.log.warn('alias ' + node.id + ' not defined.');
         } else {
-          node.id = iduri.parseAlias(options.pkg, node.id);
+          node.id = iduri.parseAlias(options, node.id);
           if (!/\.css$/.test(node.id)) {
             node.id += '.css';
           }
@@ -66,7 +64,7 @@ exports.init = function(grunt) {
       }
     });
 
-    var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format);
+    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
     var banner = format('/*! define %s */', id);
     grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
@@ -80,7 +78,7 @@ exports.init = function(grunt) {
           node.id = alias.replace(/(\.css)?$/, '-debug.css');
           return node;
         }
-        alias = iduri.parseAlias(options.pkg, alias);
+        alias = iduri.parseAlias(options, alias);
         if (/\.css$/.test(alias)) {
           node.id = alias.replace(/\.css$/, '-debug.css');
         } else {

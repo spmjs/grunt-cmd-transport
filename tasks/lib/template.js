@@ -14,10 +14,10 @@ exports.init = function(grunt) {
     var handlebars = require('handlebars');
 
     // id for template
-    var id = iduri.idFromPackage(options.pkg, fileObj.name, options.format);
+    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
 
     // handlebars alias
-    var alias = iduri.parseAlias(options.pkg, 'handlebars');
+    var alias = iduri.parseAlias(options, 'handlebars');
 
     var template = [
       'define("%s", ["%s"], function(require, exports, module) {',
@@ -31,15 +31,8 @@ exports.init = function(grunt) {
 
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
 
-    // compile code
-    var props = {};
-    props.knownHelpers = options.knownHelpers || [];
-    props.knownHelpersOnly = options.knownHelpersOnly;
-    if (options.knownData) {
-      props.data = true;
-    }
     patchHandlebars(handlebars);
-    var code = handlebars.precompile(data, props);
+    var code = handlebars.precompile(data, options.handlebars);
 
     var ret = format(template, id, alias, alias, code);
     var astCache = ast.getAst(ret);

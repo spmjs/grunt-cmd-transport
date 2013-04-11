@@ -24,16 +24,15 @@ module.exports = function(grunt) {
 
     var options = this.options({
       paths: ['sea-modules'],
-      format: '{{family}}/{{name}}/{{version}}/{{filename}}',
+
+      idleading: '',
+      alias: {},
 
       // create a debug file or not
       debug: true,
 
       // process a template or not
       process: false,
-
-      // path or object
-      pkg: 'package.json',
 
       // define parsers
       parsers: {
@@ -44,8 +43,10 @@ module.exports = function(grunt) {
       },
 
       // for handlebars
-      knownHelpers: [],
-      knownHelpersOnly: false,
+      handlebars: {
+        knownHelpers: [],
+        knownHelpersOnly: false,
+      },
 
       // output beautifier
       uglify: {
@@ -53,14 +54,6 @@ module.exports = function(grunt) {
         comments: true
       }
     });
-
-    if (grunt.util._.isString(options.pkg)) {
-      if (grunt.file.exists(options.pkg)) {
-        options.pkg = grunt.file.readJSON(options.pkg);
-      } else {
-        options.pkg = {};
-      }
-    }
 
     if (options.process === true) {
       options.process = {};

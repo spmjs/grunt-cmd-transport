@@ -46,6 +46,18 @@ module.exports = function(grunt) {
           src: '*',
           dest: 'tmp/relative'
         }]
+      },
+
+      // rely on other modules
+      rely: {
+        options: {
+          paths: ['assets']
+        },
+        files: [{
+          cwd: 'rely-arale',
+          src: '*',
+          dest: 'tmp/rely'
+        }]
       }
     }
   });

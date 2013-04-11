@@ -45,7 +45,7 @@ module.exports = function(grunt) {
       // for handlebars
       handlebars: {
         knownHelpers: [],
-        knownHelpersOnly: false,
+        knownHelpersOnly: false
       },
 
       // output beautifier

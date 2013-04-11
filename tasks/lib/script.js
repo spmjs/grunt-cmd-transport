@@ -128,6 +128,7 @@ exports.init = function(grunt) {
           if (basefile) {
             var altId = path.join(path.dirname(fpath), id);
             altId = path.relative(path.dirname(rootpath), altId);
+            altId = altId.replace(/\\/, '/');
             if (altId.charAt(0) !== '.') {
               altId = './' + altId;
             }

@@ -7,10 +7,13 @@
  */
 
 
+// https://github.com/spmjs/grunt-cmd-transport/issues/12
+
 module.exports = function(grunt) {
 
   grunt.initConfig({
     transport: {
+
       // single file without any dependencies
       single: {
         // learn file object at:
@@ -20,6 +23,19 @@ module.exports = function(grunt) {
           src: '**/*',
           filter: 'isFile',
           dest: 'tmp/single'
+        }]
+      },
+
+      // single file with cmd id format
+      cmdid: {
+        options: {
+          // you can read these from a package.json
+          idleading: 'family/name/1.0.0/'
+        },
+        files: [{
+          cwd: 'cmdid',
+          src: '*',
+          dest: 'tmp/cmdid'
         }]
       }
     }

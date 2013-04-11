@@ -48,6 +48,16 @@ module.exports = function(grunt) {
         }]
       },
 
+      // nested relative dependencies
+      nested: {
+        files: [{
+          cwd: 'nested',
+          src: '**/*',
+          filter: 'isFile',
+          dest: 'tmp/nested'
+        }]
+      },
+
       // rely on other modules
       rely: {
         options: {

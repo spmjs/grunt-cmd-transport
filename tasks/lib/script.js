@@ -64,13 +64,12 @@ exports.init = function(grunt) {
   // helpers
   // ----------------
   function moduleDependencies(id, options) {
-    if (!iduri.isAlias(options, id)) {
-      grunt.log.warn('alias ' + id + ' not defined.');
+    var alias = iduri.parseAlias(options, id);
+
+    if (iduri.isAlias(options, id) && alias === id) {
+      // usually this is "$"
       return [];
     }
-    var alias = iduri.parseAlias(options, id);
-    // usually this is "$"
-    if (alias === id) return [];
 
     var file = iduri.appendext(alias);
     if (!/\.js$/.test(file)) return [];

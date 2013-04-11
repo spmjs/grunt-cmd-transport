@@ -49,7 +49,7 @@ exports.init = function(grunt) {
 
     astCache = ast.modify(astCache, function(v) {
       var ext = path.extname(v);
-      if (ext) {
+      if (ext && options.parsers[ext]) {
         return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
       } else {
         return v + '-debug';

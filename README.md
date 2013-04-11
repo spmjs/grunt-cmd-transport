@@ -46,19 +46,19 @@ Default value: `['sea-modules']`
 
 Where are the modules in the sea.
 
-#### options.format
+#### options.idleading
 
 Type: `String`
-Default value: `{{family}}/{{name}}/{{version}}/{{filename}}`
+Default value: `""`
 
-The format of the module's id.
+Prepend idleading to generate the id of the module.
 
-#### options.pkg
+#### options.alias
 
 Type: `Object`
-Default value: `current package.json`
+Default value: `{}`
 
-The package object, usually it's everything in the `package.json`.
+Alias of modules.
 
 #### options.debug
 
@@ -66,6 +66,12 @@ Type: `Boolean`
 Default value: `true`
 
 Create a debugfile or not.
+
+#### options.handlebars
+
+Type: `Object`
+
+Options for handlebars compiler.
 
 #### options.uglify
 
@@ -108,26 +114,6 @@ grunt.initConfig({
     }
 });
 ```
-
-Change the id format:
-
-```js
-grunt.initConfig({
-    transport: {
-        target: {
-            options: {
-                format: '{{filename}}'
-            },
-            files: [{
-                cwd: 'src',
-                src: '**/*',
-                dest: 'dist'
-            }]
-        }
-    }
-});
-```
-
 
 ## Contributing
 

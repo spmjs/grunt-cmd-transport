@@ -83,6 +83,20 @@ module.exports = function(grunt) {
           src: '*',
           dest: 'tmp/alias'
         }]
+      },
+
+      // parsing css
+      css: {
+        options: {
+          alias: {
+            'button': 'alice/button/1.0.0/button.css'
+          }
+        },
+        files: [{
+          cwd: 'css',
+          src: '*.css',
+          dest: 'tmp/css'
+        }]
       }
     }
   });

@@ -37,6 +37,15 @@ module.exports = function(grunt) {
           src: '*',
           dest: 'tmp/cmdid'
         }]
+      },
+
+      // relative dependencies
+      relative: {
+        files: [{
+          cwd: 'relative',
+          src: '*',
+          dest: 'tmp/relative'
+        }]
       }
     }
   });

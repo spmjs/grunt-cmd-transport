@@ -115,6 +115,15 @@ module.exports = function(grunt) {
           src: '*',
           dest: 'tmp/handlebars'
         }]
+      },
+
+      // parsing tpl into js
+      tpl: {
+        files: [{
+          cwd: 'tpl',
+          src: '*',
+          dest: 'tmp/tpl'
+        }]
       }
     }
   });

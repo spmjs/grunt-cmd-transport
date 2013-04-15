@@ -121,6 +121,14 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**April 15th, 2013** `0.2.1`
+
+Restore tplParser.
+
+**April 11th, 2013** `0.2.0`
+
+Changed the option configuration.
+
 **April 10th, 2013** `0.1.3`
 
 Upgrade dependencies.

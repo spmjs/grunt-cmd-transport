@@ -7,6 +7,37 @@ exports.init = function(grunt) {
 
   var exports = {};
 
+  exports.tplParser = function(fileObj, options) {
+    var dest = fileObj.dest + '.js';
+    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
+
+    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var data = fileObj.srcData || grunt.file.read(fileObj.src);
+    var code = format('define("%s", [], "%s")', id, data.replace(/\"/g, '\\\"'));
+    var astCache = ast.getAst(code);
+
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(dest, data);
+
+    // create debug file
+    if (!options.debug) {
+      return;
+    }
+    dest = dest.replace(/\.tpl\.js$/, '-debug.tpl.js');
+    grunt.log.writeln('Creating debug file: ' + dest);
+
+    astCache = ast.modify(astCache, function(v) {
+      var ext = path.extname(v);
+      if (ext && options.parsers[ext]) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
+      } else {
+        return v + '-debug';
+      }
+    });
+    data = astCache.print_to_string(options.uglify);
+    grunt.file.write(dest, data);
+  };
+
   exports.handlebarsParser = function(fileObj, options) {
     var dest = fileObj.dest + '.js';
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);

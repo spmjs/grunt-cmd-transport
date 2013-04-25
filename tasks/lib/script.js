@@ -2,6 +2,7 @@ exports.init = function(grunt) {
   var path = require('path');
   var ast = require('cmd-util').ast;
   var iduri = require('cmd-util').iduri;
+  var _ = grunt.util._;
 
 
   var exports = {};
@@ -98,7 +99,7 @@ exports.init = function(grunt) {
     parsed.forEach(function(meta) {
       meta.dependencies.forEach(function(dep) {
         dep = iduri.absolute(alias, dep);
-        if (!grunt.util._.contains(deps, dep) && !grunt.util._.contains(ids, dep)) {
+        if (!_.contains(deps, dep) && !_.contains(ids, dep) && !_.contains(ids, dep.replace(/\.js$/, ''))) {
           deps.push(dep);
         }
       });

@@ -9,16 +9,11 @@
 module.exports = function(grunt) {
   var path = require('path');
   var cmd = require('cmd-util');
-  var ast = cmd.ast;
-  var iduri = cmd.iduri;
-
 
   var text = require('./lib/text').init(grunt);
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
   var template = require('./lib/template').init(grunt);
-
-  var data, astCache;
 
   grunt.registerMultiTask('transport', 'Transport everything into cmd.', function() {
 

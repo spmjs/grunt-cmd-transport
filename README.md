@@ -121,6 +121,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**April 25th, 2013** `0.2.2`
+
+Fix on filter id.
+
 **April 15th, 2013** `0.2.1`
 
 Restore tplParser.

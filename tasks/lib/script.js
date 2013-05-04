@@ -88,6 +88,10 @@ exports.init = function(grunt) {
       grunt.log.warn("can't find module " + alias);
       return [];
     }
+    if (!grunt.file.exists(fpath)) {
+      grunt.log.warn("can't find " + fpath);
+      return [];
+    }
     var data = grunt.file.read(fpath);
     var parsed = ast.parse(data);
     var deps = [];
@@ -119,6 +123,10 @@ exports.init = function(grunt) {
       var deps = [];
       var moduleDeps = {};
 
+      if (!grunt.file.exists(fpath)) {
+        grunt.log.warn("can't find " + fpath);
+        return [];
+      }
       var data = grunt.file.read(fpath);
       var parsed = ast.parseFirst(data);
       parsed.dependencies.forEach(function(id) {

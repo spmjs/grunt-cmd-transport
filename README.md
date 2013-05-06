@@ -121,6 +121,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**May 6th, 2013** `0.2.3
+
+Don't stop the process when the file not exists.
+
 **April 25th, 2013** `0.2.2`
 
 Fix on filter id.

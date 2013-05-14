@@ -34,7 +34,7 @@ exports.init = function(grunt) {
     }
 
     astCache = ast.modify(astCache, {
-      id: options.idleading + fileObj.name.replace(/\.js$/, ''),
+      id: unixy(options.idleading + fileObj.name.replace(/\.js$/, '')),
       dependencies: deps,
       require: function(v) {
         return iduri.parseAlias(options, v);
@@ -64,6 +64,10 @@ exports.init = function(grunt) {
 
   // helpers
   // ----------------
+  function unixy(uri) {
+    return uri.replace(/\\/g, '/');
+  }
+
   function moduleDependencies(id, options) {
     var alias = iduri.parseAlias(options, id);
 

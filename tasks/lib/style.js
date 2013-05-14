@@ -16,7 +16,7 @@ exports.init = function(grunt) {
 
     // transport css to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     data = css2js(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);
@@ -64,7 +64,7 @@ exports.init = function(grunt) {
       }
     });
 
-    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var banner = format('/*! define %s */', id);
     grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
@@ -97,6 +97,10 @@ exports.init = function(grunt) {
 
 
 // helpers
+function unixy(uri) {
+  return uri.replace(/\\/g, '/');
+}
+
 function css2js(code, id) {
   var cleancss = require('clean-css');
   // transform css to js

@@ -13,7 +13,7 @@ exports.init = function(grunt) {
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     // transport html to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     data = html2js(data, id);
     data = ast.getAst(data).print_to_string(options.uglify);
@@ -52,6 +52,10 @@ function html2js(code, id) {
 
   code = format(tpl, id, code.replace(/\"/g, '\\\"'));
   return code;
+}
+
+function unixy(uri) {
+  return uri.replace(/\\/g, '/');
 }
 
 exports.html2js = html2js;

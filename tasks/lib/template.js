@@ -11,7 +11,7 @@ exports.init = function(grunt) {
     var dest = fileObj.dest + '.js';
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
 
-    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var code = format('define("%s", [], "%s")', id, data.replace(/\"/g, '\\\"'));
     var astCache = ast.getAst(code);
@@ -45,7 +45,7 @@ exports.init = function(grunt) {
     var handlebars = require('handlebars');
 
     // id for template
-    var id = options.idleading + fileObj.name.replace(/\.js$/, '');
+    var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     // handlebars alias
     var alias = iduri.parseAlias(options, 'handlebars');
@@ -126,4 +126,8 @@ function patchHandlebars(Handlebars) {
     this.lastContext = 0;
     this.source = out;
   };
+}
+
+function unixy(uri) {
+  return uri.replace(/\\/g, '/');
 }

@@ -48,7 +48,7 @@ exports.init = function(grunt) {
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     // handlebars alias
-    var alias = iduri.parseAlias(options, 'handlebars');
+    var alias = 'gallery/handlebars/1.0.2/runtime'
 
     var template = [
       'define("%s", ["%s"], function(require, exports, module) {',

@@ -71,7 +71,7 @@ module.exports = function(grunt) {
           grunt.file.mkdir(fpath);
           return;
         }
-        destfile = path.join(fileObj.dest, fname);
+        destfile = path.join(fileObj.orig.dest || fileObj.dest, fname);
 
         // fpath, fname, dest
         var extname = path.extname(fpath);

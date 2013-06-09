@@ -25,6 +25,18 @@ module.exports = function(grunt) {
 
     clean: {
       tests: ['examples/tmp'],
+      expected: ['test/expected']
+    },
+
+    transport: {
+      'file-expand': {
+        files: [{
+          expand: true,
+          cwd: 'test/fixtures',
+          src: 'expand.js',
+          dest: 'test/expected'
+        }]
+      }
     },
 
     // Unit tests.
@@ -35,10 +47,13 @@ module.exports = function(grunt) {
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadTasks('tasks');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('test', ['clean:expected', 'transport', 'nodeunit']);
 
 };

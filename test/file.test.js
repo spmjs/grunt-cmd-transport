@@ -1,9 +1,9 @@
 var fs = require('fs');
+var should = require('should');
 
-exports.file = {
-  expand: function(test) {
+describe('file', function() {
+  it('expand', function() {
     var exist = fs.existsSync('test/expected/expand-debug.js');
-    test.ok(exist, "file should exist");
-    test.done();
-  }
-};
+    should.exist(exist);
+  });
+});

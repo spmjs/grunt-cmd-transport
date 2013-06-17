@@ -16,7 +16,7 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'tasks/**/*.js',
-        '<%= nodeunit.tests %>',
+        '<%= mochaTest.test.src %>',
       ],
       options: {
         jshintrc: '.jshintrc',
@@ -25,20 +25,40 @@ module.exports = function(grunt) {
 
     clean: {
       tests: ['examples/tmp'],
+      expected: ['test/expected']
+    },
+
+    transport: {
+      'file-expand': {
+        files: [{
+          expand: true,
+          cwd: 'test/fixtures',
+          src: 'expand.js',
+          dest: 'test/expected'
+        }]
+      }
     },
 
     // Unit tests.
-    nodeunit: {
-      tests: ['test/*.test.js'],
-    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/**/*.test.js']
+      }
+    }
 
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadTasks('tasks');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('test', ['clean:expected', 'transport', 'mochaTest']);
 
 };

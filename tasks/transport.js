@@ -40,6 +40,7 @@ module.exports = function(grunt) {
 
       // for handlebars
       handlebars: {
+        id: 'gallery/handlebars/1.0.2/runtime',
         knownHelpers: [],
         knownHelpersOnly: false
       },

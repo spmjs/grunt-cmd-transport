@@ -121,6 +121,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Jun 17th, 2013** `0.2.5`
+
+Handlebars ID configurable.
+
 **May 28th, 2013** `0.2.4`
 
 Use a specified version of Handlebars.

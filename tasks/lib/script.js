@@ -10,7 +10,11 @@ exports.init = function(grunt) {
   exports.jsParser = function(fileObj, options) {
     grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var astCache = ast.getAst(data);
+    try {
+      var astCache = ast.getAst(data);
+    } catch(e) { 
+      grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+    }
 
     var meta = ast.parseFirst(astCache);
 

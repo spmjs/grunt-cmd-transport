@@ -125,6 +125,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 Handlebars ID configurable.
 
+Bugfix for not showing JS parse error.
+
 **May 28th, 2013** `0.2.4`
 
 Use a specified version of Handlebars.

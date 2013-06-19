@@ -24,7 +24,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.tpl\.js$/, '-debug.tpl.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {
       var ext = path.extname(v);
@@ -76,7 +75,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.handlebars\.js$/, '-debug.handlebars.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {
       var ext = path.extname(v);

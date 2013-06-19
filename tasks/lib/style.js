@@ -27,7 +27,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.css\.js$/, '-debug.css.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     data = ast.modify(data, function(v) {
       var ext = path.extname(v);
@@ -69,7 +68,6 @@ exports.init = function(grunt) {
     grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
     var dest = fileObj.dest.replace(/\.css$/, '-debug.css');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     ret = css.stringify(data[0].code, function(node) {
       if (node.type === 'import' && node.id) {

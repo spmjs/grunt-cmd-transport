@@ -32,9 +32,9 @@ exports.init = function(grunt) {
     var deps = parseDependencies(fileObj.src, options);
 
     if (deps.length) {
-      grunt.log.writeln('found dependencies ' + deps);
+      grunt.log.verbose.writeln('found dependencies ' + deps);
     } else {
-      grunt.log.writeln('found no dependencies');
+      grunt.log.verbose.writeln('found no dependencies');
     }
 
     astCache = ast.modify(astCache, {
@@ -51,7 +51,6 @@ exports.init = function(grunt) {
       return;
     }
     var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(data, function(v) {
       var ext = path.extname(v);
@@ -81,7 +80,10 @@ exports.init = function(grunt) {
     }
 
     var file = iduri.appendext(alias);
-    if (!/\.js$/.test(file)) return [];
+
+    if (!/\.js$/.test(file)) {
+      return [];
+    }
 
     var fpath;
     options.paths.some(function(base) {
@@ -92,12 +94,13 @@ exports.init = function(grunt) {
         return true;
       }
     });
+
     if (!fpath) {
-      grunt.log.warn("can't find module " + alias);
+      grunt.log.error("can't find module " + alias);
       return [];
     }
     if (!grunt.file.exists(fpath)) {
-      grunt.log.warn("can't find " + fpath);
+      grunt.log.error("can't find " + fpath);
       return [];
     }
     var data = grunt.file.read(fpath);
@@ -132,7 +135,9 @@ exports.init = function(grunt) {
       var moduleDeps = {};
 
       if (!grunt.file.exists(fpath)) {
-        grunt.log.warn("can't find " + fpath);
+        if (!/\{\w+\}/.test(fpath)) {
+          grunt.log.warn("can't find " + fpath);
+        }
         return [];
       }
       var data = grunt.file.read(fpath);

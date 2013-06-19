@@ -97,11 +97,11 @@ exports.init = function(grunt) {
     });
 
     if (!fpath) {
-      grunt.log.error("can't find module " + alias);
+      grunt.fail.warn("can't find module " + alias);
       return [];
     }
     if (!grunt.file.exists(fpath)) {
-      grunt.fail.fatal("can't find " + fpath);
+      grunt.fail.warn("can't find " + fpath);
       return [];
     }
     var data = grunt.file.read(fpath);

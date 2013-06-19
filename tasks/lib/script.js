@@ -30,7 +30,9 @@ exports.init = function(grunt) {
       grunt.file.write(fileObj.dest, data);
       return;
     }
-    var deps = parseDependencies(fileObj.src, options);
+    var deps = parseDependencies(fileObj.src, options).map(function(dep) {
+      return dep.replace(/\.js$/, '');
+    });
 
     if (deps.length) {
       grunt.log.verbose.writeln('found dependencies ' + deps);

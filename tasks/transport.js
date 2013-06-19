@@ -56,9 +56,10 @@ module.exports = function(grunt) {
       options.process = {};
     }
 
-    var fname, destfile;
+    var fname, destfile, count = 0;
     this.files.forEach(function(fileObj) {
       fileObj.src.forEach(function(fpath) {
+        count++;
 
         // get the right filename and filepath
         if (fileObj.cwd) {
@@ -99,5 +100,7 @@ module.exports = function(grunt) {
         });
       });
     });
+
+    grunt.log.writeln('transport ' + count.toString().cyan + ' files');
   });
 };

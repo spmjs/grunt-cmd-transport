@@ -8,12 +8,13 @@ exports.init = function(grunt) {
   var exports = {};
 
   exports.jsParser = function(fileObj, options) {
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     try {
       var astCache = ast.getAst(data);
     } catch(e) {
-      grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+      grunt.log.error('js parse error ' + fileObj.src.red)
+      grunt.fail.fatal(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
     }
 
     var meta = ast.parseFirst(astCache);
@@ -100,7 +101,7 @@ exports.init = function(grunt) {
       return [];
     }
     if (!grunt.file.exists(fpath)) {
-      grunt.log.error("can't find " + fpath);
+      grunt.fail.fatal("can't find " + fpath);
       return [];
     }
     var data = grunt.file.read(fpath);

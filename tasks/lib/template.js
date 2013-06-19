@@ -9,7 +9,7 @@ exports.init = function(grunt) {
 
   exports.tplParser = function(fileObj, options) {
     var dest = fileObj.dest + '.js';
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + dest);
 
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
@@ -39,7 +39,7 @@ exports.init = function(grunt) {
 
   exports.handlebarsParser = function(fileObj, options) {
     var dest = fileObj.dest + '.js';
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + dest);
 
     var handlebars = require('handlebars');
 

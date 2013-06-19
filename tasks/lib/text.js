@@ -10,7 +10,8 @@ exports.init = function(grunt) {
   exports.html2jsParser = function(fileObj, options) {
     // don't transport debug html files
     if (/\-debug\.html/.test(fileObj.src)) return;
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     // transport html to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
@@ -24,7 +25,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.html\.js$/, '-debug.html.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     data = ast.modify(data, function(v) {
       var ext = path.extname(v);

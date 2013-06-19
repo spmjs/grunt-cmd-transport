@@ -12,7 +12,7 @@ exports.init = function(grunt) {
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     try {
       var astCache = ast.getAst(data);
-    } catch(e) { 
+    } catch(e) {
       grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
     }
 
@@ -136,7 +136,13 @@ exports.init = function(grunt) {
         return [];
       }
       var data = grunt.file.read(fpath);
-      var parsed = ast.parseFirst(data);
+      try {
+        var parsed = ast.parseFirst(data);
+      } catch(e) {
+        grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+        return [];
+      }
+
       parsed.dependencies.forEach(function(id) {
 
         if (id.charAt(0) === '.') {

@@ -10,8 +10,8 @@
 // https://github.com/spmjs/grunt-cmd-transport/issues/12
 
 module.exports = function(grunt) {
-  var style = require('../tasks/lib/style');
-  var css2jsParser = style.init(grunt).css2jsParser;
+  var css2jsParser = require('../tasks/lib/style').init(grunt).css2jsParser;
+  var jsParser = require('../tasks/lib/script').init(grunt).jsParser;
 
   grunt.initConfig({
     transport: {
@@ -138,6 +138,22 @@ module.exports = function(grunt) {
           cwd: 'css2js',
           src: '*.css',
           dest: 'tmp/css2js'
+        }]
+      },
+
+      style: {
+        options: {
+          parsers: {
+            '.css': [css2jsParser],
+            '.js': [jsParser]
+          },
+          styleBox: true,
+          idleading: 'arale/widget/1.0.0/'
+        },
+        files: [{
+          cwd: 'style',
+          src: '*',
+          dest: 'tmp/style'
         }]
       }
     }

@@ -41,7 +41,7 @@ exports.init = function(grunt) {
       }
     });
     data = astCache.print_to_string(options.uglify);
-    grunt.file.write(fileObj.dest, data);
+    grunt.file.write(fileObj.dest, addOuterBoxClass(data, options));
 
     if (!options.debug) {
       return;
@@ -58,7 +58,7 @@ exports.init = function(grunt) {
       }
     });
     data = astCache.print_to_string(options.uglify);
-    grunt.file.write(dest, data);
+    grunt.file.write(dest, addOuterBoxClass(data, options));
   };
 
 
@@ -66,6 +66,18 @@ exports.init = function(grunt) {
   // ----------------
   function unixy(uri) {
     return uri.replace(/\\/g, '/');
+  }
+
+  function addOuterBoxClass(data, options) {
+    // arale/widget/1.0.0/ => arale-widget-1_0_0
+    var styleId = unixy(options.idleading)
+      .replace(/\/$/, '')
+      .replace(/\//g, '-')
+      .replace(/\./g, '_');
+    if (options.styleBox && styleId) {
+      return data.replace(/(\}\)[\s\S]*?$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
+    }
+    return data;
   }
 
   function moduleDependencies(id, options) {

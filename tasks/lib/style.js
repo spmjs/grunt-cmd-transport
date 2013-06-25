@@ -1,11 +1,10 @@
 var path = require('path');
 var format = require('util').format;
+var css = require('cmd-util').css;
 
 exports.init = function(grunt) {
   var ast = require('cmd-util').ast;
   var iduri = require('cmd-util').iduri;
-  var css = require('cmd-util').css;
-
 
   var exports = {};
 
@@ -18,7 +17,7 @@ exports.init = function(grunt) {
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
-    data = css2js(data, id);
+    data = css2js(data, id, options);
     data = ast.getAst(data).print_to_string(options.uglify);
     var dest = fileObj.dest + '.js';
     grunt.file.write(dest, data);
@@ -101,7 +100,19 @@ function unixy(uri) {
   return uri.replace(/\\/g, '/');
 }
 
-function css2js(code, id) {
+function css2js(code, id, options) {
+  // arale/widget/1.0.0/ => arale-widget-1_0_0
+  var styleId = unixy(options.idleading)
+    .replace(/\/$/, '')
+    .replace(/\//g, '-')
+    .replace(/\./g, '_');
+  if (options.styleBox && styleId) {
+    code = code.split('}').map(function(o) {
+      if (!o) return o;
+      return o.replace(/(^\n*)/, '$1.' + styleId + ' ');
+    }).join('}');
+  }
+
   var cleancss = require('clean-css');
   // transform css to js
   // spmjs/spm#581

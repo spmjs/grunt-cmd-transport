@@ -48,7 +48,10 @@ module.exports = function(grunt) {
       uglify: {
         beautify: true,
         comments: true
-      }
+      },
+
+      // https://github.com/aliceui/aliceui.org/issues/9
+      styleBox: false
     });
 
     if (options.process === true) {
@@ -75,7 +78,6 @@ module.exports = function(grunt) {
 
         // fpath, fname, dest
         var extname = path.extname(fpath);
-
         var fileparsers = options.parsers[extname];
         if (!fileparsers || fileparsers.length === 0) {
           grunt.file.copy(fpath, destfile);

@@ -50,6 +50,9 @@ exports.init = function(grunt) {
         if (node.id.charAt(0) === '.') {
           return node;
         }
+        if (/^https?:\/\//.test(node.id)) {
+          return node;
+        }
         if (!iduri.isAlias(options, node.id)) {
           grunt.log.warn('alias ' + node.id + ' not defined.');
         } else {
@@ -73,6 +76,9 @@ exports.init = function(grunt) {
         var alias = node.id;
         if (alias.charAt(0) === '.') {
           node.id = alias.replace(/(\.css)?$/, '-debug.css');
+          return node;
+        }
+        if (/^https?:\/\//.test(node.id)) {
           return node;
         }
         alias = iduri.parseAlias(options, alias);

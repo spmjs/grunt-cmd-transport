@@ -8,9 +8,14 @@ exports.init = function(grunt) {
   var exports = {};
 
   exports.jsParser = function(fileObj, options) {
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
-    var astCache = ast.getAst(data);
+    try {
+      var astCache = ast.getAst(data);
+    } catch(e) {
+      grunt.log.error('js parse error ' + fileObj.src.red)
+      grunt.fail.fatal(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+    }
 
     var meta = ast.parseFirst(astCache);
 
@@ -25,12 +30,14 @@ exports.init = function(grunt) {
       grunt.file.write(fileObj.dest, data);
       return;
     }
-    var deps = parseDependencies(fileObj.src, options);
+    var deps = parseDependencies(fileObj.src, options).map(function(dep) {
+      return dep.replace(/\.js$/, '');
+    });
 
     if (deps.length) {
-      grunt.log.writeln('found dependencies ' + deps);
+      grunt.log.verbose.writeln('found dependencies ' + deps);
     } else {
-      grunt.log.writeln('found no dependencies');
+      grunt.log.verbose.writeln('found no dependencies');
     }
 
     astCache = ast.modify(astCache, {
@@ -47,7 +54,6 @@ exports.init = function(grunt) {
       return;
     }
     var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(data, function(v) {
       var ext = path.extname(v);
@@ -89,7 +95,10 @@ exports.init = function(grunt) {
     }
 
     var file = iduri.appendext(alias);
-    if (!/\.js$/.test(file)) return [];
+
+    if (!/\.js$/.test(file)) {
+      return [];
+    }
 
     var fpath;
     options.paths.some(function(base) {
@@ -100,12 +109,13 @@ exports.init = function(grunt) {
         return true;
       }
     });
+
     if (!fpath) {
-      grunt.log.warn("can't find module " + alias);
+      grunt.fail.warn("can't find module " + alias);
       return [];
     }
     if (!grunt.file.exists(fpath)) {
-      grunt.log.warn("can't find " + fpath);
+      grunt.fail.warn("can't find " + fpath);
       return [];
     }
     var data = grunt.file.read(fpath);
@@ -140,11 +150,19 @@ exports.init = function(grunt) {
       var moduleDeps = {};
 
       if (!grunt.file.exists(fpath)) {
-        grunt.log.warn("can't find " + fpath);
+        if (!/\{\w+\}/.test(fpath)) {
+          grunt.log.warn("can't find " + fpath);
+        }
         return [];
       }
       var data = grunt.file.read(fpath);
-      var parsed = ast.parseFirst(data);
+      try {
+        var parsed = ast.parseFirst(data);
+      } catch(e) {
+        grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+        return [];
+      }
+
       parsed.dependencies.forEach(function(id) {
 
         if (id.charAt(0) === '.') {

@@ -73,6 +73,16 @@ Type: `Object`
 
 Options for handlebars compiler.
 
+Configure handlebars ID:
+
+```js
+options: {
+    handlebars: {
+        id: 'handlebars'
+    }
+}
+```
+
 #### options.uglify
 
 Type: `Object`
@@ -120,6 +130,16 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+
+**Jun 19th, 2013** `0.2.6`
+
+Show parsing JS error log.
+
+**Jun 17th, 2013** `0.2.5`
+
+Handlebars ID configurable.
+
+Bugfix for not showing JS parse error.
 
 **May 28th, 2013** `0.2.4`
 

@@ -11,7 +11,7 @@ exports.init = function(grunt) {
   exports.css2jsParser = function(fileObj, options) {
     // don't transport debug css files
     if (/\-debug\.css$/.test(fileObj.src)) return;
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
 
     // transport css to js
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
@@ -26,7 +26,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.css\.js$/, '-debug.css.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     data = ast.modify(data, function(v) {
       var ext = path.extname(v);
@@ -45,7 +44,7 @@ exports.init = function(grunt) {
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     data = css.parse(data);
 
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
     var ret = css.stringify(data[0].code, function(node) {
       if (node.type === 'import' && node.id) {
         if (node.id.charAt(0) === '.') {
@@ -68,7 +67,6 @@ exports.init = function(grunt) {
     grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
     var dest = fileObj.dest.replace(/\.css$/, '-debug.css');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     ret = css.stringify(data[0].code, function(node) {
       if (node.type === 'import' && node.id) {

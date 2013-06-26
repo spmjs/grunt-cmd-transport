@@ -9,7 +9,7 @@ exports.init = function(grunt) {
 
   exports.tplParser = function(fileObj, options) {
     var dest = fileObj.dest + '.js';
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + dest);
 
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
@@ -24,7 +24,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.tpl\.js$/, '-debug.tpl.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {
       var ext = path.extname(v);
@@ -40,7 +39,7 @@ exports.init = function(grunt) {
 
   exports.handlebarsParser = function(fileObj, options) {
     var dest = fileObj.dest + '.js';
-    grunt.log.writeln('Transport ' + fileObj.src + ' -> ' + dest);
+    grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + dest);
 
     var handlebars = require('handlebars');
 
@@ -48,7 +47,7 @@ exports.init = function(grunt) {
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     // handlebars alias
-    var alias = 'gallery/handlebars/1.0.2/runtime';
+    var alias = options.handlebars.id;
 
     var template = [
       'define("%s", ["%s"], function(require, exports, module) {',
@@ -76,7 +75,6 @@ exports.init = function(grunt) {
       return;
     }
     dest = dest.replace(/\.handlebars\.js$/, '-debug.handlebars.js');
-    grunt.log.writeln('Creating debug file: ' + dest);
 
     astCache = ast.modify(astCache, function(v) {
       var ext = path.extname(v);

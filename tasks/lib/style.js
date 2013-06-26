@@ -104,10 +104,10 @@ function css2js(code, id, options) {
     .replace(/\/$/, '')
     .replace(/\//g, '-')
     .replace(/\./g, '_');
-  if (options.styleBox && styleId) {
+  if (options.styleBox === true && styleId) {
     code = code.split('}').map(function(o) {
-      if (!o) return o;
-      return o.replace(/(^\n*)/, '$1.' + styleId + ' ');
+      if (!o.replace(/[\n\r ]/g, '')) return o;
+      return o.replace(/((?:^\/\*\!.*?\*\/)?\n*)/, '$1.' + styleId + ' ');
     }).join('}');
   }
 

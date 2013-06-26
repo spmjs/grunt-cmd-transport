@@ -80,8 +80,8 @@ exports.init = function(grunt) {
       .replace(/\/$/, '')
       .replace(/\//g, '-')
       .replace(/\./g, '_');
-    if (options.styleBox && styleId) {
-      return data.replace(/(\}\)[\s\S]*?$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
+    if (options.styleBox === true && styleId) {
+      data = data.replace(/(\}\)[;\n\r ]*$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
     }
     return data;
   }

@@ -131,6 +131,12 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Jun 26th, 2013** `0.2.7`
+
+- improve log
+- remove .js extname in dependencies
+- add styleBox option
+
 **Jun 19th, 2013** `0.2.6`
 
 Show parsing JS error log.

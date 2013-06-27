@@ -9,11 +9,11 @@ exports.init = function(grunt) {
 
   exports.jsParser = function(fileObj, options) {
     grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
-    var data = fileObj.srcData || grunt.file.read(fileObj.src);
+    var astCache, data = fileObj.srcData || grunt.file.read(fileObj.src);
     try {
-      var astCache = ast.getAst(data);
+      astCache = ast.getAst(data);
     } catch(e) {
-      grunt.log.error('js parse error ' + fileObj.src.red)
+      grunt.log.error('js parse error ' + fileObj.src.red);
       grunt.fail.fatal(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
     }
 
@@ -75,8 +75,8 @@ exports.init = function(grunt) {
   }
 
   function addOuterBoxClass(data, options) {
-    // arale/widget/1.0.0/ => arale-widget-1_0_0
-    var styleId = unixy(options.idleading)
+    // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
+    var styleId = unixy((options || {}).idleading || '')
       .replace(/\/$/, '')
       .replace(/\//g, '-')
       .replace(/\./g, '_');
@@ -155,9 +155,9 @@ exports.init = function(grunt) {
         }
         return [];
       }
-      var data = grunt.file.read(fpath);
+      var parsed, data = grunt.file.read(fpath);
       try {
-        var parsed = ast.parseFirst(data);
+        parsed = ast.parseFirst(data);
       } catch(e) {
         grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
         return [];

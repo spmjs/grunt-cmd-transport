@@ -1,14 +1,26 @@
+@charset "utf-8";
+
+@import url("fineprint.css");
 
 body {
   
-  color: red;
+  _color: red;
 }
 
 /* { } */
-.content li {
-  float: left;
+.content li, .content a {
+  *display: inline-block;
 }
 
-.content li, .content a {
-  display: inline-block;
+@media screen {
+  body { font-size: 13px }
+
+  .content li {
+    background-color: #fff;
+  }
+}
+
+@keyframes foo {
+  0% { top: 0; left: 0 }
+  100% { top: 100px; left: 100% }
 }

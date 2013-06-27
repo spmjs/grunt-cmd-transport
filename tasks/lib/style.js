@@ -1,6 +1,8 @@
 var path = require('path');
 var format = require('util').format;
 var css = require('cmd-util').css;
+var cssParse = require('css').parse;
+var cssStringify = require('css').stringify;
 
 exports.init = function(grunt) {
   var ast = require('cmd-util').ast;
@@ -104,6 +106,20 @@ function unixy(uri) {
   return uri.replace(/\\/g, '/');
 }
 
+function parseRules(rules, prefix) {
+  return rules.map(function(o) {
+    if (o.selectors) {
+      o.selectors = o.selectors.map(function(selector) {
+        return prefix + selector;
+      });
+    }
+    if (o.rules) {
+      o.rules = parseRules(o.rules, prefix);
+    }
+    return o;
+  });
+}
+
 function css2js(code, id, options) {
   // remove comment and format
   var cleancss = require('clean-css');
@@ -112,23 +128,16 @@ function css2js(code, id, options) {
     removeEmpty: true
   });
 
-  // arale/widget/1.0.0/ => arale-widget-1_0_0
-  var styleId = unixy(options.idleading)
+  // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
+  var styleId = unixy((options || {}).idleading || '')
     .replace(/\/$/, '')
     .replace(/\//g, '-')
     .replace(/\./g, '_');
+  var prefix = ['.', styleId, ' '].join('');
   if (options.styleBox === true && styleId) {
-    code = code.split('}').map(function(o) {
-      if (!o) return o;
-      var part = o.split('{');
-      if (part.length) {
-        return part[0].split(',').map(function(o) {
-          return ['.', styleId, ' ', o].join('');
-        }).join(',') + '{' + part[1];
-      } else {
-        return o;
-      }
-    }).join('}');
+    var data = cssParse(code);
+    data.stylesheet.rules = parseRules(data.stylesheet.rules, prefix);
+    code = cssStringify(data);
   }
 
   // transform css to js

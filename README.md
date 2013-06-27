@@ -133,7 +133,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 **Jun 27th, 2013** `0.2.8`
 
-support group selector
+- improve parsing css
+- add testcase
 
 **Jun 26th, 2013** `0.2.7`
 

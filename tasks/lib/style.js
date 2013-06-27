@@ -121,13 +121,6 @@ function parseRules(rules, prefix) {
 }
 
 function css2js(code, id, options) {
-  // remove comment and format
-  var cleancss = require('clean-css');
-  code = cleancss.process(code, {
-    keepSpecialComments: 0,
-    removeEmpty: true
-  });
-
   // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
   var styleId = unixy((options || {}).idleading || '')
     .replace(/\/$/, '')
@@ -139,6 +132,13 @@ function css2js(code, id, options) {
     data.stylesheet.rules = parseRules(data.stylesheet.rules, prefix);
     code = cssStringify(data);
   }
+
+  // remove comment and format
+  var cleancss = require('clean-css');
+  code = cleancss.process(code, {
+    keepSpecialComments: 0,
+    removeEmpty: true
+  });
 
   // transform css to js
   // spmjs/spm#581

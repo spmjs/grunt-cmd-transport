@@ -201,6 +201,6 @@ module.exports = function(grunt) {
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('test', ['clean', 'transport', 'mochaTest']);
+  grunt.registerTask('test', ['clean', 'transport', 'mochaTest', 'clean']);
 
 };

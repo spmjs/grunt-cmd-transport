@@ -131,6 +131,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Jun 27th, 2013** `0.2.8`
+
+support group selector
+
 **Jun 26th, 2013** `0.2.7`
 
 - improve log

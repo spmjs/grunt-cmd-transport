@@ -1,7 +1,14 @@
+
 body {
+  
   color: red;
 }
 
+/* { } */
 .content li {
   float: left;
+}
+
+.content li, .content a {
+  display: inline-block;
 }

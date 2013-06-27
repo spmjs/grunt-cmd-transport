@@ -105,6 +105,13 @@ function unixy(uri) {
 }
 
 function css2js(code, id, options) {
+  // remove comment and format
+  var cleancss = require('clean-css');
+  code = cleancss.process(code, {
+    keepSpecialComments: 0,
+    removeEmpty: true
+  });
+
   // arale/widget/1.0.0/ => arale-widget-1_0_0
   var styleId = unixy(options.idleading)
     .replace(/\/$/, '')
@@ -112,12 +119,18 @@ function css2js(code, id, options) {
     .replace(/\./g, '_');
   if (options.styleBox === true && styleId) {
     code = code.split('}').map(function(o) {
-      if (!o.replace(/[\n\r ]/g, '')) return o;
-      return o.replace(/((?:^\/\*\!.*?\*\/)?\n*)/, '$1.' + styleId + ' ');
+      if (!o) return o;
+      var part = o.split('{');
+      if (part.length) {
+        return part[0].split(',').map(function(o) {
+          return ['.', styleId, ' ', o].join('');
+        }).join(',') + '{' + part[1];
+      } else {
+        return o;
+      }
     }).join('}');
   }
 
-  var cleancss = require('clean-css');
   // transform css to js
   // spmjs/spm#581
   var tpl = [
@@ -126,10 +139,6 @@ function css2js(code, id, options) {
     '});'
   ].join('\n');
 
-  code = cleancss.process(code, {
-    keepSpecialComments: 0,
-    removeEmpty: true
-  });
   // spmjs/spm#651
   code = code.split(/\r\n|\r|\n/).map(function(line) {
     return line.replace(/\\/g, '\\\\');

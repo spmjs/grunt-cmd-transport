@@ -1,0 +1,6 @@
+/*! define alias.css */
+/*! import alice/button/1.0.0/button.css */
+/*! import ./ie8.css */
+.alias {
+  color: red;
+}

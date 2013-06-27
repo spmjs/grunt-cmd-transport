@@ -1,0 +1,4 @@
+/*! define simple.css */
+body {
+  color: '#fff';
+}

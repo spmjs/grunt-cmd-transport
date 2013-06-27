@@ -1,0 +1,1 @@
+define("foo-debug.html", [], "<div>foo / bar \\ baz</div>\n");

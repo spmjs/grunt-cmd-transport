@@ -1,0 +1,4 @@
+define("baz", [ "arale/class/foo" ], function(require, exports, module) {
+    require("arale/class/foo");
+    module.exports = "baz";
+});

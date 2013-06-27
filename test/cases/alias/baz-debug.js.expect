@@ -1,0 +1,4 @@
+define("baz-debug", [ "arale/class/foo-debug" ], function(require, exports, module) {
+    require("arale/class/foo-debug");
+    module.exports = "baz";
+});

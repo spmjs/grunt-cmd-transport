@@ -1,0 +1,4 @@
+/*! define simple-debug.css */
+body {
+  color: '#fff';
+}

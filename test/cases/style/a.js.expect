@@ -1,0 +1,3 @@
+define("arale/widget/1.0.0/a", [], function(require, exports, module) {
+    exports.foo = function() {};
+module.exports.outerBoxClass="arale-widget-1_0_0";});

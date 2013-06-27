@@ -1,0 +1,6 @@
+/*! define alias-debug.css */
+/*! import alice/button/1.0.0/button-debug.css */
+/*! import ./ie8-debug.css */
+.alias {
+  color: red;
+}

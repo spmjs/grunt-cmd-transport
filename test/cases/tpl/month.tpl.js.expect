@@ -1,0 +1,1 @@
+define("month.tpl", [], '<div class="ui-calendar-month">\n{{#each items}}\n<ul class="ui-calendar-month-column">\n    {{#each this}}\n    <li class="{{#unless available}}disabled-element{{/unless}}" data-role="month" data-value="{{value}}">{{_ label}}</li>\n    {{/each}}\n</ul>\n{{/each}}\n</div>\n');

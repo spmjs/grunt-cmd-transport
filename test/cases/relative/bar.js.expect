@@ -1,0 +1,3 @@
+define("bar", [ "./baz" ], function(require, exports, module) {
+    require("./baz");
+});

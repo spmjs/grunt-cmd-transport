@@ -1,0 +1,3 @@
+define("arale/widget/1.0.0/a.css", [], function() {
+    seajs.importStyle('@charset "utf-8";\n\n\n.arale-widget-1_0_0 body {\n  _color: red;\n}\n\n.arale-widget-1_0_0 .content li,\n.arale-widget-1_0_0 .content a {\n  *display: inline-block;\n}\n\n@media screen {\n  .arale-widget-1_0_0 body {\n    font-size: 13px;\n  }\n\n  .arale-widget-1_0_0 .content li {\n    background-color: #fff;\n  }\n}\n\n@keyframes foo {\n  0% {\n    top: 0;\n    left: 0;\n  }\n\n  100% {\n    top: 100px;\n    left: 100%;\n  }\n}');
+});

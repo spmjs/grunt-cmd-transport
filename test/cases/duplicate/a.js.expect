@@ -1,0 +1,4 @@
+define("a", [ "./b", "./d", "./c" ], function(require, exports, module) {
+    require("./b");
+    require("./c");
+});

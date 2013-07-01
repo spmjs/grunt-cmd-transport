@@ -178,6 +178,14 @@ module.exports = function(grunt) {
           src: '*.{js,css}',
           dest: 'test/expected/style'
         }]
+      },
+
+      duplicate: {
+        files: [{
+          cwd: 'test/cases/duplicate',
+          src: '**/*.js',
+          dest: 'test/expected/duplicate'
+        }]
       }
     },
 

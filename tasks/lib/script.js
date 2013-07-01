@@ -30,9 +30,7 @@ exports.init = function(grunt) {
       grunt.file.write(fileObj.dest, data);
       return;
     }
-    var deps = parseDependencies(fileObj.src, options).map(function(dep) {
-      return dep.replace(/\.js$/, '');
-    });
+    var deps = parseDependencies(fileObj.src, options);
 
     if (deps.length) {
       grunt.log.verbose.writeln('found dependencies ' + deps);
@@ -162,8 +160,9 @@ exports.init = function(grunt) {
         grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
         return [];
       }
-
-      parsed.dependencies.forEach(function(id) {
+      parsed.dependencies.map(function(id) {
+        return id.replace(/\.js$/, '');
+      }).forEach(function(id) {
 
         if (id.charAt(0) === '.') {
           // fix nested relative dependencies

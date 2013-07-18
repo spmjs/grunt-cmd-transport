@@ -14,6 +14,7 @@ module.exports = function(grunt) {
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
   var template = require('./lib/template').init(grunt);
+  var json = require('./lib/json').init(grunt);
 
   grunt.registerMultiTask('transport', 'Transport everything into cmd.', function() {
 
@@ -34,6 +35,7 @@ module.exports = function(grunt) {
         '.js': [script.jsParser],
         '.css': [style.cssParser],
         '.html': [text.html2jsParser],
+        '.json': [json.jsonParser],
         '.tpl': [template.tplParser],
         '.handlebars': [template.handlebarsParser]
       },

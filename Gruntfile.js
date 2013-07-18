@@ -186,6 +186,14 @@ module.exports = function(grunt) {
           src: '**/*.js',
           dest: 'test/expected/duplicate'
         }]
+      },
+
+      json: {
+        files: [{
+          cwd: 'test/cases/json',
+          src: '*.json',
+          dest: 'test/expected/json'
+        }]
       }
     },
 

@@ -131,6 +131,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Jul 23st, 2013** `0.2.10`
+
+support id/deps sepecified
+
 **Jul 1st, 2013** `0.2.9`
 
 fix deps duplicate 

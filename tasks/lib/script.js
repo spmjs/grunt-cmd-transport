@@ -26,28 +26,34 @@ exports.init = function(grunt) {
     }
 
     if (meta.id) {
-      grunt.log.warn('found id in "' + fileObj.src + '"');
-      grunt.file.write(fileObj.dest, data);
-      return;
+      grunt.log.verbose.writeln('id exists in "' + fileObj.src + '"');
     }
-    var deps = parseDependencies(fileObj.src, options);
 
-    if (deps.length) {
-      grunt.log.verbose.writeln('found dependencies ' + deps);
+    var deps, depsSpecified = false;
+    if (meta.dependencyNode) {
+      deps = meta.dependencies;
+      depsSpecified = true;
+      grunt.log.verbose.writeln('dependencies exists in "' + fileObj.src + '"');
     } else {
-      grunt.log.verbose.writeln('found no dependencies');
+      deps = parseDependencies(fileObj.src, options);
+      grunt.log.verbose.writeln(deps.length ?
+        'found dependencies ' + deps : 'found no dependencies');
     }
 
+    // create .js file
     astCache = ast.modify(astCache, {
-      id: unixy(options.idleading + fileObj.name.replace(/\.js$/, '')),
+      id: meta.id ? meta.id : unixy(options.idleading + fileObj.name.replace(/\.js$/, '')),
       dependencies: deps,
       require: function(v) {
-        return iduri.parseAlias(options, v);
+        // ignore when deps is specified by developer
+        return depsSpecified ? v : iduri.parseAlias(options, v);
       }
     });
     data = astCache.print_to_string(options.uglify);
     grunt.file.write(fileObj.dest, addOuterBoxClass(data, options));
 
+
+    // create -debug.js file
     if (!options.debug) {
       return;
     }

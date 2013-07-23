@@ -194,6 +194,20 @@ module.exports = function(grunt) {
           src: '*.json',
           dest: 'test/expected/json'
         }]
+      },
+
+      'id-deps-exist': {
+        options: {
+          paths: ['test/cases/assets'],
+          alias: {
+            'foo': 'arale/class/foo'
+          }
+        },
+        files: [{
+          cwd: 'test/cases/id-deps-exist',
+          src: '*.js',
+          dest: 'test/expected/id-deps-exist'
+        }]
       }
     },
 

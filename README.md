@@ -131,6 +131,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Aug 2st, 2013** `0.2.11`
+
+don't resolve text!path/to/some.xx 
+
 **Jul 23st, 2013** `0.2.10`
 
 support id/deps sepecified

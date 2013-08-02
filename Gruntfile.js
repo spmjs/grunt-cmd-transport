@@ -100,7 +100,8 @@ module.exports = function(grunt) {
         options: {
           paths: ['test/cases/assets'],
           alias: {
-            'foo': 'arale/class/foo'
+            'foo': 'arale/class/foo',
+            '$': '$'
           }
         },
         files: [{

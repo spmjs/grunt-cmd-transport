@@ -98,6 +98,11 @@ exports.init = function(grunt) {
       return [];
     }
 
+    // don't resolve text!path/to/some.xx, same as seajs-text
+    if (/^text!/.test(id)) {
+      return [];
+    }
+
     var file = iduri.appendext(alias);
 
     if (!/\.js$/.test(file)) {

@@ -209,6 +209,14 @@ module.exports = function(grunt) {
           src: '*.js',
           dest: 'test/expected/id-deps-exist'
         }]
+      },
+
+      'text!': {
+        files: [{
+          cwd: 'test/cases/text!',
+          src: '*.js',
+          dest: 'test/expected/text!'
+        }]
       }
     },
 

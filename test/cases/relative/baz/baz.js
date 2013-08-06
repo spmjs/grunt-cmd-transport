@@ -1,3 +1,3 @@
 define(function(require, exports, module) {
-  module.exports = 'baz'
+  module.exports = 'baz';
 });

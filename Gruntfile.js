@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       relative: {
         files: [{
           cwd: 'test/cases/relative',
-          src: '*.js',
+          src: '**/*.js',
           dest: 'test/expected/relative'
         }]
       },

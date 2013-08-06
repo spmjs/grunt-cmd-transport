@@ -1,4 +1,4 @@
 define(function(require, exports, module) {
   require('./bar');
-  require('./baz');
+  require('./baz/baz');
 });

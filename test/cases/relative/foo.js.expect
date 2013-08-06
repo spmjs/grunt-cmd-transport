@@ -1,4 +1,4 @@
-define("foo", [ "./bar", "./baz" ], function(require, exports, module) {
+define("foo", [ "./bar", "./baz/baz" ], function(require, exports, module) {
     require("./bar");
-    require("./baz");
+    require("./baz/baz");
 });

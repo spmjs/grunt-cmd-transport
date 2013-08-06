@@ -1,4 +1,4 @@
-define("foo-debug", [ "./bar-debug", "./baz-debug" ], function(require, exports, module) {
+define("foo-debug", [ "./bar-debug", "./baz/baz-debug" ], function(require, exports, module) {
     require("./bar-debug");
-    require("./baz-debug");
+    require("./baz/baz-debug");
 });

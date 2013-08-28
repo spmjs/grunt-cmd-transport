@@ -131,17 +131,16 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-**Aug 2st, 2013** `0.2.11`
 
-don't resolve text!path/to/some.xx 
+**Oct 28st, 2013** `0.2.10`
 
-**Jul 23st, 2013** `0.2.10`
-
+stylebox support :root selector
 support id/deps sepecified
+don't resolve text!path/to/some.xx
 
 **Jul 1st, 2013** `0.2.9`
 
-fix deps duplicate 
+fix deps duplicate
 
 **Jun 27th, 2013** `0.2.8`
 

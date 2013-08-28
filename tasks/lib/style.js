@@ -110,6 +110,11 @@ function parseRules(rules, prefix) {
   return rules.map(function(o) {
     if (o.selectors) {
       o.selectors = o.selectors.map(function(selector) {
+        console.log(selector);
+        // handle :root selector {}
+        if (selector.indexOf(':root') === 0) {
+          return ':root ' + prefix + selector.replace(':root', ' ');
+        }
         return prefix + selector;
       });
     }

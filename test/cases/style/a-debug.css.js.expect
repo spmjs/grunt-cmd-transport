@@ -1,3 +1,3 @@
 define("arale/widget/1.0.0/a-debug.css", [], function() {
-    seajs.importStyle('@charset "utf-8";.arale-widget-1_0_0 body{_color:red}.arale-widget-1_0_0 .content li,.arale-widget-1_0_0 .content a{*display:inline-block}@media screen{.arale-widget-1_0_0 body{font-size:13px}.arale-widget-1_0_0 .content li{background-color:#fff}}@keyframes foo{0%{top:0;left:0}100%{top:100px;left:100%}}');
+    seajs.importStyle('@charset "utf-8";.arale-widget-1_0_0 body{_color:red}.arale-widget-1_0_0 .content li,.arale-widget-1_0_0 .content a{*display:inline-block}@media screen{.arale-widget-1_0_0 body{font-size:13px}.arale-widget-1_0_0 .content li{background-color:#fff}}@keyframes foo{0%{top:0;left:0}100%{top:100px;left:100%}}:root .arale-widget-1_0_0 .content{font-size:12px}');
 });

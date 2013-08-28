@@ -24,3 +24,7 @@ body {
   0% { top: 0; left: 0 }
   100% { top: 100px; left: 100% }
 }
+
+:root .content {
+    font-size: 12px;
+}

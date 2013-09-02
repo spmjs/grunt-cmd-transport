@@ -131,6 +131,9 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Oct 28st, 2013** `0.2.11`
+
+stylebox support array.
 
 **Oct 28st, 2013** `0.2.10`
 

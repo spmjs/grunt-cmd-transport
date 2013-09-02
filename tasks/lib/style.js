@@ -19,7 +19,7 @@ exports.init = function(grunt) {
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
-    data = css2js(data, id, options);
+    data = css2js(data, id, options, fileObj);
     data = ast.getAst(data).print_to_string(options.uglify);
     var dest = fileObj.dest + '.js';
     grunt.file.write(dest, data);
@@ -110,7 +110,6 @@ function parseRules(rules, prefix) {
   return rules.map(function(o) {
     if (o.selectors) {
       o.selectors = o.selectors.map(function(selector) {
-        console.log(selector);
         // handle :root selector {}
         if (selector.indexOf(':root') === 0) {
           return ':root ' + prefix + selector.replace(':root', ' ');
@@ -125,14 +124,27 @@ function parseRules(rules, prefix) {
   });
 }
 
-function css2js(code, id, options) {
+function css2js(code, id, options, fileObj) {
   // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
   var styleId = unixy((options || {}).idleading || '')
     .replace(/\/$/, '')
     .replace(/\//g, '-')
     .replace(/\./g, '_');
   var prefix = ['.', styleId, ' '].join('');
-  if (options.styleBox === true && styleId) {
+
+  var addStyleBox = false;
+  if (options.styleBox === true) {
+    addStyleBox = true;
+  } else if (options.styleBox && options.styleBox.length) {
+    options.styleBox.forEach(function(file) {
+      console.log(file, fileObj.name);
+      if (file === fileObj.name) {
+        addStyleBox = true;
+      }
+    });
+  }
+
+  if (addStyleBox && styleId) {
     var data = cssParse(code);
     data.stylesheet.rules = parseRules(data.stylesheet.rules, prefix);
     code = cssStringify(data);

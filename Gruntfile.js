@@ -171,7 +171,7 @@ module.exports = function(grunt) {
             '.css': [css2jsParser],
             '.js': [jsParser]
           },
-          styleBox: true,
+          styleBox: ["a.css"],
           idleading: 'arale/widget/1.0.0/'
         },
         files: [{

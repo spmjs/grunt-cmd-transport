@@ -84,7 +84,7 @@ exports.init = function(grunt) {
       .replace(/\/$/, '')
       .replace(/\//g, '-')
       .replace(/\./g, '_');
-    if (options.styleBox === true && styleId) {
+    if (options.styleBox && styleId) {
       data = data.replace(/(\}\)[;\n\r ]*$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
     }
     return data;

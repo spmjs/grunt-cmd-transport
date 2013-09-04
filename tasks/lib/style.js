@@ -137,7 +137,6 @@ function css2js(code, id, options, fileObj) {
     addStyleBox = true;
   } else if (options.styleBox && options.styleBox.length) {
     options.styleBox.forEach(function(file) {
-      console.log(file, fileObj.name);
       if (file === fileObj.name) {
         addStyleBox = true;
       }
@@ -148,6 +147,7 @@ function css2js(code, id, options, fileObj) {
     var data = cssParse(code);
     data.stylesheet.rules = parseRules(data.stylesheet.rules, prefix);
     code = cssStringify(data);
+    id = id + '?' + styleId;
   }
 
   // remove comment and format

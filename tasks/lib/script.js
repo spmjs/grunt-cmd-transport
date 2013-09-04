@@ -46,7 +46,14 @@ exports.init = function(grunt) {
       dependencies: deps,
       require: function(v) {
         // ignore when deps is specified by developer
-        return depsSpecified ? v : iduri.parseAlias(options, v);
+        var ret = v;
+        if (!depsSpecified) {
+          ret = iduri.parseAlias(options, v);
+          if (ret.indexOf('.css') > 0 && options.styleBox) {
+            ret += '?' + getStyleId(options);
+          }
+        }
+        return ret;
       }
     });
     data = astCache.print_to_string(options.uglify);
@@ -78,12 +85,16 @@ exports.init = function(grunt) {
     return uri.replace(/\\/g, '/');
   }
 
-  function addOuterBoxClass(data, options) {
-    // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
-    var styleId = unixy((options || {}).idleading || '')
+  function getStyleId(options) {
+    return unixy((options || {}).idleading || '')
       .replace(/\/$/, '')
       .replace(/\//g, '-')
       .replace(/\./g, '_');
+  }
+
+  function addOuterBoxClass(data, options) {
+    // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
+    var styleId = getStyleId(options);
     if (options.styleBox && styleId) {
       data = data.replace(/(\}\)[;\n\r ]*$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
     }

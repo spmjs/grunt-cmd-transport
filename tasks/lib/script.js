@@ -46,14 +46,7 @@ exports.init = function(grunt) {
       dependencies: deps,
       require: function(v) {
         // ignore when deps is specified by developer
-        var ret = v;
-        if (!depsSpecified) {
-          ret = iduri.parseAlias(options, v);
-          if (ret.indexOf('.css') > 0 && options.styleBox) {
-            ret += '?' + getStyleId(options);
-          }
-        }
-        return ret;
+        return depsSpecified ? v : iduri.parseAlias(options, v);
       }
     });
     data = astCache.print_to_string(options.uglify);
@@ -68,8 +61,6 @@ exports.init = function(grunt) {
 
     astCache = ast.modify(data, function(v) {
       var ext = path.extname(v);
-      // .css?arale-widget_1_0_0
-      ext = ext.replace(/\?.*$/, '');
 
       if (ext && options.parsers[ext]) {
         return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);

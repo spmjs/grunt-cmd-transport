@@ -143,11 +143,12 @@ function css2js(code, id, options, fileObj) {
     });
   }
 
-  if (addStyleBox && styleId) {
+  // if outside css modules, fileObj would be undefined
+  // then dont add styleBox
+  if (addStyleBox && styleId && fileObj) {
     var data = cssParse(code);
     data.stylesheet.rules = parseRules(data.stylesheet.rules, prefix);
     code = cssStringify(data);
-    id = id + '?' + styleId;
   }
 
   // remove comment and format

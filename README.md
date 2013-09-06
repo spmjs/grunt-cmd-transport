@@ -131,7 +131,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-**Sep 4th, 2013** `0.2.13`
+**Sep 4th, 2013** `0.3.0`
 
 Remove styleBox id logic added in 0.2.12, now require outside css module do not adding to styleBox,
 that resolve lots of bugs.

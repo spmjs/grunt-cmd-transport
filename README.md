@@ -131,6 +131,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Sep 4th, 2013** `0.2.13`
+
+Fix a debug bug related to styeBox.
+
 **Sep 4th, 2013** `0.2.12`
 
 styleBox css module should has styleBox id.

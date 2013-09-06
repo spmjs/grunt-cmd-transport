@@ -133,7 +133,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 **Sep 4th, 2013** `0.2.13`
 
-Fix a debug bug related to styeBox.
+Remove styleBox id logic added in 0.2.12, now require outside css module do not adding to styleBox,
+that resolve lots of bugs.
 
 **Sep 4th, 2013** `0.2.12`
 

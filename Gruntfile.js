@@ -44,6 +44,7 @@ module.exports = function(grunt) {
         // learn file object at:
         // http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
         files: [{
+          expand: true,
           cwd: 'test/cases/single',
           src: '**/*.js',
           filter: 'isFile',
@@ -58,6 +59,7 @@ module.exports = function(grunt) {
           idleading: 'family/name/1.0.0/'
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/cmdid',
           src: '*.js',
           dest: 'test/expected/cmdid'
@@ -67,6 +69,7 @@ module.exports = function(grunt) {
       // relative dependencies
       relative: {
         files: [{
+          expand: true,
           cwd: 'test/cases/relative',
           src: '**/*.js',
           dest: 'test/expected/relative'
@@ -76,6 +79,7 @@ module.exports = function(grunt) {
       // nested relative dependencies
       nested: {
         files: [{
+          expand: true,
           cwd: 'test/cases/nested',
           src: '**/*.js',
           filter: 'isFile',
@@ -89,6 +93,7 @@ module.exports = function(grunt) {
           paths: ['test/cases/assets']
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/rely-arale',
           src: '*.js',
           dest: 'test/expected/rely-arale'
@@ -105,6 +110,7 @@ module.exports = function(grunt) {
           }
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/alias',
           src: '*.js',
           dest: 'test/expected/alias'
@@ -119,6 +125,7 @@ module.exports = function(grunt) {
           }
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/css',
           src: '*.css',
           dest: 'test/expected/css'
@@ -128,6 +135,7 @@ module.exports = function(grunt) {
       // parsing html into js
       text: {
         files: [{
+          expand: true,
           cwd: 'test/cases/text',
           src: '*.html',
           dest: 'test/expected/text'
@@ -137,6 +145,7 @@ module.exports = function(grunt) {
       // parsing handlebars into js
       handlebars: {
         files: [{
+          expand: true,
           cwd: 'test/cases/handlebars',
           src: '*.handlebars',
           dest: 'test/expected/handlebars'
@@ -146,6 +155,7 @@ module.exports = function(grunt) {
       // parsing tpl into js
       tpl: {
         files: [{
+          expand: true,
           cwd: 'test/cases/tpl',
           src: '*.tpl',
           dest: 'test/expected/tpl'
@@ -159,6 +169,7 @@ module.exports = function(grunt) {
           }
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/css2js',
           src: '*.css',
           dest: 'test/expected/css2js'
@@ -175,6 +186,7 @@ module.exports = function(grunt) {
           idleading: 'arale/widget/1.0.0/'
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/style',
           src: '*.{js,css}',
           dest: 'test/expected/style'
@@ -183,6 +195,7 @@ module.exports = function(grunt) {
 
       duplicate: {
         files: [{
+          expand: true,
           cwd: 'test/cases/duplicate',
           src: '**/*.js',
           dest: 'test/expected/duplicate'
@@ -191,6 +204,7 @@ module.exports = function(grunt) {
 
       json: {
         files: [{
+          expand: true,
           cwd: 'test/cases/json',
           src: '*.json',
           dest: 'test/expected/json'
@@ -205,6 +219,7 @@ module.exports = function(grunt) {
           }
         },
         files: [{
+          expand: true,
           cwd: 'test/cases/id-deps-exist',
           src: '*.js',
           dest: 'test/expected/id-deps-exist'
@@ -213,6 +228,7 @@ module.exports = function(grunt) {
 
       'text!': {
         files: [{
+          expand: true,
           cwd: 'test/cases/text!',
           src: '*.js',
           dest: 'test/expected/text!'

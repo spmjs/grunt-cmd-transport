@@ -86,7 +86,7 @@ module.exports = function(grunt) {
         fn({
           src: src,
           srcData: srcData,
-          name: path.basename(src),
+          name: path.relative(fileObj.orig.cwd || '', src),
           dest: dest
         }, options);
       });

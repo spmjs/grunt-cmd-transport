@@ -1,0 +1,3 @@
+define("b", [ "../v" ], function(require, exports, module) {
+    require("../v");
+});

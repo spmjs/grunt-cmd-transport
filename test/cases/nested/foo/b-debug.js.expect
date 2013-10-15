@@ -1,3 +1,0 @@
-define("foo/b-debug", [ "./c-debug" ], function(require, exports, module) {
-    exports.b = require("./c-debug");
-});

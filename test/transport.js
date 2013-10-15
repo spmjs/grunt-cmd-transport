@@ -12,7 +12,7 @@ describe('file', function() {
   var expected = path.resolve('test/expected');
   var dirs = fs.readdirSync(base);
   dirs.forEach(function(dir) {
-    var files = fs.readdirSync(path.join(base, dir)).filter(function(file) {
+    var files = readDirs(path.join(base, dir)).filter(function(file) {
       return /\.expect$/.test(file);
     });
     if (files.length) {
@@ -26,3 +26,19 @@ describe('file', function() {
     }
   });
 });
+
+function readDirs(dir) {
+  var result = [];
+  fs.readdirSync(dir)
+    .forEach(function(file) {
+      var sub = path.join(dir, file);
+      if (fs.statSync(sub).isDirectory()) {
+        result = result.concat(readDirs(sub).map(function(subFile) {
+          return path.join(file, subFile);
+        }));
+      } else {
+        result.push(file);
+      }
+    });
+  return result;
+}

@@ -78,6 +78,9 @@ module.exports = function(grunt) {
 
       // nested relative dependencies
       nested: {
+        options: {
+          debug: false
+        },
         files: [{
           expand: true,
           cwd: 'test/cases/nested',

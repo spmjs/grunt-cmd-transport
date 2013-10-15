@@ -1,3 +1,0 @@
-define("foo/c-debug", [], function(require, exports, module) {
-    exports.c = "c";
-});

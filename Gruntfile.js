@@ -236,6 +236,9 @@ module.exports = function(grunt) {
       },
 
       'directory': {
+        options: {
+          debug: false
+        },
         files: [{
           expand: true,
           cwd: 'test/cases/directory',

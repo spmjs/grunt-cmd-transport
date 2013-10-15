@@ -186,9 +186,10 @@ exports.init = function(grunt) {
             var altId = path.join(path.dirname(fpath), id);
             var dirname = path.dirname(rootpath);
             if ( dirname !== altId ) {
-              altId = path.relative(path.dirname(rootpath), altId);
+              altId = path.relative(dirname, altId);
             } else {
-              altId = path.join(path.relative(rootpath, dirname), dirname);
+              // the same name between file and directory
+              altId = path.relative(dirname, altId + '.js').replace(/\.js$/, '');
             }
             altId = altId.replace(/\\/g, '/');
             if (altId.charAt(0) !== '.') {

@@ -183,8 +183,8 @@ exports.init = function(grunt) {
         if (id.charAt(0) === '.') {
           // fix nested relative dependencies
           if (basefile) {
-            var altId = path.join(path.dirname(fpath), id);
-            var dirname = path.dirname(rootpath);
+            var altId = path.join(path.dirname(fpath), id).replace(/\\/g, '/');
+            var dirname = path.dirname(rootpath).replace(/\\/g, '/');
             if ( dirname !== altId ) {
               altId = path.relative(dirname, altId);
             } else {

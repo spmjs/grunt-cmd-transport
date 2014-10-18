@@ -71,6 +71,10 @@ exports.init = function(grunt) {
     var banner = format('/*! define %s */', id);
     grunt.file.write(fileObj.dest, [banner, ret].join('\n'));
 
+    // create -debug.css file
+    if (options.debug === false) {
+      return;
+    }
     var dest = fileObj.dest.replace(/\.css$/, '-debug.css');
 
     ret = css.stringify(data[0].code, function(node) {

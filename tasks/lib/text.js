@@ -17,7 +17,7 @@ exports.init = function(grunt) {
     var id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
 
     data = html2js(data, id);
-    data = ast.getAst(data).print_to_string(options.uglify);
+    data = ast.getAst(data).print_to_string(options.uglify) + '\n';
     var dest = fileObj.dest + '.js';
     grunt.file.write(dest, data);
 
@@ -34,7 +34,7 @@ exports.init = function(grunt) {
         return v + '-debug';
       }
     });
-    data = data.print_to_string(options.uglify);
+    data = data.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
   };
 

@@ -18,9 +18,9 @@ describe('file', function() {
     if (files.length) {
       it('should test ' + dir, function() {
         files.forEach(function(file) {
-          var expect = fs.readFileSync(path.join(base, dir, file))
+          var actual = fs.readFileSync(path.join(base, dir, file))
             .toString().replace(/\r|\\r/g, '');
-          var actual= fs.readFileSync(path.join(expected, dir, file.replace(/\.expect$/, '')))
+          var expect = fs.readFileSync(path.join(expected, dir, file.replace(/\.expect$/, '')))
             .toString().replace(/\r|\\r/g, '');
           expect.should.eql(actual);
         });

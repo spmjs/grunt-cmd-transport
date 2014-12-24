@@ -16,7 +16,7 @@ exports.init = function(grunt) {
     var code = format('define("%s", [], "%s")', id, data.replace(/\"/g, '\\\"'));
     var astCache = ast.getAst(code);
 
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
 
     // create debug file
@@ -33,7 +33,7 @@ exports.init = function(grunt) {
         return v + '-debug';
       }
     });
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
   };
 
@@ -67,7 +67,7 @@ exports.init = function(grunt) {
     var ret = format(template, id, alias, alias, code);
     var astCache = ast.getAst(ret);
 
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
 
     // create debug file
@@ -84,7 +84,7 @@ exports.init = function(grunt) {
         return v + '-debug';
       }
     });
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
   };
 

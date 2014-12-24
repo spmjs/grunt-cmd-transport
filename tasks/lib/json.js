@@ -16,7 +16,7 @@ exports.init = function(grunt) {
     var code = format('define("%s", [], %s)', id, data);
     var astCache = ast.getAst(code);
 
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
 
     // create debug file
@@ -33,7 +33,7 @@ exports.init = function(grunt) {
         return v + '-debug';
       }
     });
-    data = astCache.print_to_string(options.uglify);
+    data = astCache.print_to_string(options.uglify) + '\n';
     grunt.file.write(dest, data);
   };
   return exports;

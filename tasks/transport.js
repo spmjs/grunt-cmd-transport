@@ -27,6 +27,9 @@ module.exports = function(grunt) {
       // create a debug file or not
       debug: true,
 
+      // create a file with hash
+      hash: false,
+
       // process a template or not
       process: false,
 

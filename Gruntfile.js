@@ -18,11 +18,11 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'tasks/**/*.js',
-        '<%= mochaTest.test.src %>',
+        '<%= mochaTest.test.src %>'
       ],
       options: {
-        jshintrc: '.jshintrc',
-      },
+        jshintrc: '.jshintrc'
+      }
     },
 
     clean: {
@@ -93,7 +93,10 @@ module.exports = function(grunt) {
       // rely on other modules
       rely: {
         options: {
-          paths: ['test/cases/assets']
+          paths: ['test/cases/assets'],
+          alias: {
+            foo: 'arale/class/foo'
+          }
         },
         files: [{
           expand: true,
@@ -248,6 +251,25 @@ module.exports = function(grunt) {
           src: '**/*.js',
           dest: 'test/expected/directory'
         }]
+      },
+
+      'hash': {
+        options: {
+          paths: ['test/cases/assets'],
+          alias: {
+            'foo': 'arale/class/foo',
+            'bar': 'family/bar/bar',
+            '$': '$'
+          },
+          idleading: 'family/name/',
+          hash: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/cases/hash',
+          src: '*.js',
+          dest: 'test/expected/hash'
+        }]
       }
     },
 
@@ -271,6 +293,6 @@ module.exports = function(grunt) {
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('test', ['clean', 'transport', 'mochaTest', 'clean']);
+  grunt.registerTask('test', ['clean', 'transport', 'mochaTest']);
 
 };

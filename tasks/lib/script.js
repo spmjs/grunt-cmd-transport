@@ -1,12 +1,11 @@
 exports.init = function(grunt) {
-  var crypto = require('crypto');
+
   var path = require('path');
-  var join = path.join;
   var extname = path.extname;
   var ast = require('cmd-util').ast;
   var iduri = require('cmd-util').iduri;
   var relative = require('relative');
-  var _ = grunt.util._;
+  var md5 = require('./util').md5;
 
   return {
     jsParser: jsParser
@@ -102,6 +101,7 @@ exports.init = function(grunt) {
     }
 
     function writeFile(data, dest) {
+      grunt.log.writeln('transport ' + dest + ' created');
       grunt.file.write(dest, addOuterBoxClass(data + '\n', options));
     }
 
@@ -304,14 +304,5 @@ exports.init = function(grunt) {
     }
   }
 
-  function md5(contents, deps) {
-    contents = deps.map(function(depFile) {
-      return depFile.contents || '';
-    }) + contents;
-    return crypto
-    .createHash('md5')
-    .update(contents, 'utf8')
-    .digest('hex')
-    .slice(0, 8);
-  }
+
 };

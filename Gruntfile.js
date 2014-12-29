@@ -9,8 +9,8 @@
 
 module.exports = function(grunt) {
 
-  var style = require('./').style.init(grunt);
-  var css2jsParser = style.css2jsParser;
+  var css2js = require('./').css2js.init(grunt);
+  var css2jsParser = css2js.cssParser;
   var jsParser = require('./').script.init(grunt).jsParser;
 
   grunt.initConfig({
@@ -269,6 +269,24 @@ module.exports = function(grunt) {
           cwd: 'test/cases/hash',
           src: '*.js',
           dest: 'test/expected/hash'
+        }]
+      },
+
+      project: {
+        options: {
+          paths: ['test/cases/project/sea-modules'],
+          alias: {
+            'list': 'alice/list/1.0.1/list.css',
+            'base': 'arale/base/1.1.1/base'
+          },
+          idleading: 'family/name/',
+          hash: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/cases/project',
+          src: '*.*',
+          dest: 'test/expected/project'
         }]
       }
     },

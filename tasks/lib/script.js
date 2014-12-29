@@ -2,6 +2,7 @@ exports.init = function(grunt) {
   var crypto = require('crypto');
   var path = require('path');
   var join = path.join;
+  var extname = path.extname;
   var ast = require('cmd-util').ast;
   var iduri = require('cmd-util').iduri;
   var relative = require('relative');
@@ -81,7 +82,7 @@ exports.init = function(grunt) {
 
     function addDebug(v) {
       if (v.id) v = v.id;
-      var ext = path.extname(v);
+      var ext = extname(v);
       if (ext && options.parsers[ext]) {
         return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
       } else {
@@ -92,7 +93,7 @@ exports.init = function(grunt) {
     function addHash(v) {
       if (!v.hash) return v.id;
 
-      var ext = path.extname(v.id);
+      var ext = extname(v.id);
       if (ext && options.parsers[ext]) {
         return v.id.replace(new RegExp('\\' + ext + '$'), '-' + v.hash + ext);
       } else {
@@ -131,6 +132,10 @@ exports.init = function(grunt) {
         if (!/\{\w+\}/.test(filepath)) {
           grunt.log.warn('can\'t find ' + filepath);
         }
+        return [];
+      }
+
+      if (extname(filepath) !== '.js') {
         return [];
       }
 
@@ -237,6 +242,18 @@ exports.init = function(grunt) {
 
       if (!grunt.file.exists(path)) return;
       var astCache, deps, contents = grunt.file.read(path);
+
+      if (extname(path) !== '.js') {
+        return fileCache[path] = {
+          id: undefined,
+          dependencies: [],
+          depMap: {},
+          depsSpecified: false,
+          contents: contents,
+          path: path,
+          hash: md5(contents, [])
+        };
+      }
 
       try {
         astCache = ast.getAst(contents);

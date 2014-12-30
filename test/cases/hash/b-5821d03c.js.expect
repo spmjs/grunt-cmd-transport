@@ -1,0 +1,4 @@
+define("family/name/b-5821d03c", [ "./c/c-5bffe50a", "$", "family/bar/bar" ], function(require, exports, module) {
+    require("./c/c-5bffe50a.js");
+    require("family/bar/bar");
+});

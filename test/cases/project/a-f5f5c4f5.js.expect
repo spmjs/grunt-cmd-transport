@@ -1,0 +1,8 @@
+define("family/name/a-f5f5c4f5", [ "./a-670b8177.handlebars", "./a-d41d8cd9.json", "./a-2cee5097.html", "./a-d41d8cd9.tpl", "./a-e1f4111c.css", "./b-e5f793e3", "arale/base/1.1.1/base", "arale/class/1.1.0/class", "arale/events/1.1.0/events" ], function(require) {
+    require("./a-670b8177.handlebars");
+    require("./a-d41d8cd9.json");
+    require("./a-2cee5097.html");
+    require("./a-d41d8cd9.tpl");
+    require("./a-e1f4111c.css");
+    require("./b-e5f793e3.js");
+});

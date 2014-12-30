@@ -4,7 +4,7 @@ exports.md5 = function md5(contents, deps) {
   if (!deps) deps = [];
   contents = deps.map(function(depFile) {
     return depFile.contents || '';
-  }) + contents;
+  }).join('') + contents;
   return crypto
   .createHash('md5')
   .update(contents, 'utf8')

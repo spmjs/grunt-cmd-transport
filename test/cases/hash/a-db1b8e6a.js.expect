@@ -1,4 +1,0 @@
-define("family/name/a-db1b8e6a", [ "./b-4849d846", "./c/c-5bffe50a", "$", "family/bar/bar", "arale/class/foo" ], function(require, exports, module) {
-    require("./b-4849d846.js");
-    require("arale/class/foo");
-});

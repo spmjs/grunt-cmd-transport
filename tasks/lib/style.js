@@ -41,24 +41,10 @@ exports.init = function(grunt) {
     }
 
     function addHash(node) {
-      var code;
       if (node.id.charAt(0) === '.') {
-        code = grunt.file.read(join(dirname(fileObj.src), node.id));
-      } else {
-        var i = 0, path;
-        while(path = options.paths[i++]) {
-          var file = join(path, node.id);
-          if (grunt.file.exists(file)) {
-            code = grunt.file.read(file);
-            break;
-          }
-        }
-        if (!code) {
-          grunt.log.warn('fail find file ' + node.id);
-        }
+        var code = grunt.file.read(join(dirname(fileObj.src), node.id));
+        node.id = node.id.replace(/\.css$/, '-' + md5(code) + '.css');
       }
-      var hash = md5(code);
-      node.id = node.id.replace(/\.css$/, '-' + hash + '.css');
     }
 
     function parseCss(data, editId) {

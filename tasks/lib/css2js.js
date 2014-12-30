@@ -10,11 +10,22 @@ exports.init = function(grunt) {
   });
 };
 
-function css2js(code, options) {
+function css2js(code, options, fileObj) {
+  var addStyleBox = false;
+  if (options.styleBox === true) {
+    addStyleBox = true;
+  } else if (options.styleBox && options.styleBox.length) {
+    options.styleBox.forEach(function(file) {
+      if (file === fileObj.name) {
+        addStyleBox = true;
+      }
+    });
+  }
+
   // if outside css modules, fileObj would be undefined
   // then dont add styleBox
   var opt = {};
-  if (options.styleBox === true) {
+  if (addStyleBox && fileObj) {
     // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
     var styleId = unixy((options || {}).idleading || '')
       .replace(/\/$/, '')
@@ -33,7 +44,7 @@ function css2js(code, options) {
 
   // transform css to js
   // spmjs/spm#581
-  var template = 'function() {seajs.importStyle("%s")}';
+  var template = 'function() {seajs.importStyle(\'%s\')}';
   return format(template, code);
 }
 

@@ -13,8 +13,9 @@ exports.init = function(grunt, options) {
   exports[type + 'Parser'] = function(fileObj, options) {
     var dest, id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
+    var hash = md5(data);
     var deps = depParser ? depParser(data, options) : '';
-    var factory = factoryParser ? factoryParser(data, options) : '{}';
+    var factory = factoryParser ? factoryParser(data, options, fileObj) : '{}';
     var file = {
       contents: format('define("%s", [%s], %s)', id, deps, factory),
       dest: fileObj.dest + '.js'
@@ -30,14 +31,19 @@ exports.init = function(grunt, options) {
     if (options.debug) {
       dest = file.dest.replace(retTypeJs, '-debug.' + type + '.js');
       data = ast.modify(file.contents, {
-        id: id.replace(regType, '-debug.' + type)
+        id: id.replace(regType, '-debug.' + type),
+        dependencies: function(id) {
+          return id + '-debug';
+        },
+        require: function(id) {
+          return id + '-debug';
+        }
       }).print_to_string(options.uglify);
       writeFile(data, dest);
     }
 
     // create hash file xxx-{hash}.{type}.js
     if (options.hash) {
-      var hash = md5(factory);
       dest = file.dest.replace(retTypeJs, '-' + hash + '.' + type + '.js');
       data = ast.modify(file.contents, {
         id: id.replace(regType, '-' + hash + '.' + type)

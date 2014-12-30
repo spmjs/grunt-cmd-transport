@@ -188,7 +188,7 @@ module.exports = function(grunt) {
             '.css': [css2jsParser],
             '.js': [jsParser]
           },
-          styleBox: ["a.css"],
+          styleBox: ['a.css'],
           idleading: 'arale/widget/1.0.0/'
         },
         files: [{
@@ -280,12 +280,13 @@ module.exports = function(grunt) {
             'base': 'arale/base/1.1.1/base'
           },
           idleading: 'family/name/',
-          hash: true
+          hash: true,
+          debug: false
         },
         files: [{
           expand: true,
           cwd: 'test/cases/project',
-          src: '*.*',
+          src: ['*.*', '!*.expect'],
           dest: 'test/expected/project'
         }]
       }

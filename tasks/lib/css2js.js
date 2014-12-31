@@ -9,6 +9,14 @@ exports.init = function(grunt) {
     factoryParser: css2js
   });
 };
+exports.css2js = function(code, id, options, fileObj) {
+  var tpl = [
+    'define("%s", [], function() {',
+    "seajs.importStyle('%s')",
+    '});'
+  ].join('\n');
+  return format(tpl, id, css2js(code, options, fileObj));
+};
 
 function css2js(code, options, fileObj) {
   var addStyleBox = false;

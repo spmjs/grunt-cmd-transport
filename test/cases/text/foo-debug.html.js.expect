@@ -1,1 +1,1 @@
-define("foo-debug.html", [], "<div>foo / bar \\ baz</div>\n");
+define("foo-debug.html", [], "<div><p>\\n The <strong>'clean' <span><em>\\ \"HTML is here.\" /</em></span></strong></p></div>");

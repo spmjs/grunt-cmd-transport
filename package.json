@@ -32,6 +32,7 @@
     "css": "~1.4.0",
     "css2str": "~0.1.1",
     "handlebars": "1.0.11",
+    "htmlclean": "~2.2.3",
     "relative": "~1.2.0",
     "uglify-js": "~2.2.5"
   },

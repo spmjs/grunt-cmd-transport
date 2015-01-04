@@ -1,3 +1,4 @@
+var htmlclean = require('htmlclean');
 var commonParser = require('./common');
 
 exports.init = function(grunt) {
@@ -8,11 +9,6 @@ exports.init = function(grunt) {
 };
 
 function getCode(data) {
-  data = data.split(/\r\n|\r|\n/)
-    .map(function(line) {
-      return line.replace(/\\/g, '\\\\');
-    })
-    .join('\n')
-    .replace(/\"/g, '\\\"');
+  data = htmlclean(data).replace(/(\"|\'|\\)/g, '\\$1');
   return '"' + data + '"';
 }

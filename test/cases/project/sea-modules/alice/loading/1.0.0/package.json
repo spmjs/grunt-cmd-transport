@@ -1,0 +1,23 @@
+{
+  "family": "alice",
+  "name": "loading",
+  "description": "alice loading style.",
+  "version": "1.0.0",
+  "homepage": "http://aliceui.org/loading/",
+  "keywords": [
+    "加载中"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aliceui/loading/"
+  },
+  "bugs": {
+    "url": "https://github.com/aliceui/loading/issues"
+  },
+  "spm": {
+    "alias": {},
+    "output": [
+      "loading.css"
+    ]
+  }
+}

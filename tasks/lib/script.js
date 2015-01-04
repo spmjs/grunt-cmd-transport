@@ -90,6 +90,7 @@ exports.init = function(grunt) {
     }
 
     function addHash(v) {
+      if (v.id.charAt(0) !== '.') return v.id;
       if (!v.hash) return v.id;
 
       var ext = extname(v.id);
@@ -202,6 +203,10 @@ exports.init = function(grunt) {
 
       var file = getFileInfo(fpath);
 
+      if (!file) {
+        return [{id: id}];
+      }
+
       // don't parse no javascript dependencies
       if (!/\.js$/.test(fpath)) {
         return [{
@@ -303,6 +308,4 @@ exports.init = function(grunt) {
       };
     }
   }
-
-
 };

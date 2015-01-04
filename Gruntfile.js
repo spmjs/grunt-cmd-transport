@@ -277,7 +277,8 @@ module.exports = function(grunt) {
           paths: ['test/cases/project/sea-modules'],
           alias: {
             'list': 'alice/list/1.0.1/list.css',
-            'base': 'arale/base/1.1.1/base'
+            'base': 'arale/base/1.1.1/base',
+            'loading': 'alice/loading/1.0.0/loading.css'
           },
           idleading: 'family/name/',
           hash: true,

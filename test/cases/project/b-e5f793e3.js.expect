@@ -1,3 +1,0 @@
-define("family/name/b-e5f793e3", [ "arale/base/1.1.1/base", "arale/class/1.1.0/class", "arale/events/1.1.0/events" ], function(require) {
-    require("arale/base/1.1.1/base");
-});

@@ -278,6 +278,7 @@ module.exports = function(grunt) {
           alias: {
             'list': 'alice/list/1.0.1/list.css',
             'base': 'arale/base/1.1.1/base',
+            'confirmbox': 'arale/dialog/1.3.1/confirmbox',
             'loading': 'alice/loading/1.0.0/loading.css'
           },
           idleading: 'family/name/',

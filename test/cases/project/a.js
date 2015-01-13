@@ -5,4 +5,5 @@ define(function(require) {
   require('./a.tpl');
   require('./a.css');
   require('./b');
+  require('confirmbox');
 });

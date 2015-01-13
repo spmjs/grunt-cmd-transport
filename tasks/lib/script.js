@@ -6,6 +6,7 @@ exports.init = function(grunt) {
   var iduri = require('cmd-util').iduri;
   var relative = require('relative');
   var md5 = require('./util').md5;
+  var _ = grunt.util._;
 
   return {
     jsParser: jsParser
@@ -218,18 +219,24 @@ exports.init = function(grunt) {
       }
 
       var parsed = ast.parse(file.contents);
+      var ids = parsed.map(function(meta) {
+        return meta.id;
+      });
       var deps = parsed.map(function(meta) {
         return meta.dependencies.map(function(id) {
           id = iduri.absolute(alias, id);
-          id = iduri.appendext(id);
-          var file = getFileInfo(path.join(fbase, id));
-          if (!file) return;
-          return {
-            id: id,
-            path: file.path,
-            hash: file.hash,
-            contents: file.contents
-          };
+          // won't return if deps were loaded(defined in file)
+          if (!_.contains(ids, id) && !_.contains(ids, id.replace(/\.js$/, ''))) {
+            id = iduri.appendext(id);
+            var file = getFileInfo(path.join(fbase, id));
+            if (!file) return;
+            return {
+              id: id,
+              path: file.path,
+              hash: file.hash,
+              contents: file.contents
+            };
+          }
         });
       });
       return [{

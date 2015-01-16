@@ -8,6 +8,8 @@ exports.init = function(grunt, options) {
   var depParser = options.depParser;
   var regType = new RegExp('.' + type + '$');
   var retTypeJs = new RegExp('.' + type + '.js$');
+  var Instrumenter = require('istanbul').Instrumenter;
+  var instrumenter = new Instrumenter();
 
   var exports = {};
 
@@ -44,20 +46,27 @@ exports.init = function(grunt, options) {
 
     // create debug file xxx-debug.{type}.js
     if (options.debug) {
-      data = ast.modify(data, addDebug).print_to_string(options.uglify);
+      var data_ = ast.modify(data, addDebug).print_to_string(options.uglify);
       filepath = filepath.replace(retTypeJs, '-debug.' + type + '.js');
+      writeFile(data_, filepath);
+    }
+
+    // create file with coverage using istanbul, xxx-cov.js
+    if (options.cov) {
+      data = ast.modify(data, {
+        id: addCov,
+        dependencies: function(v) {
+          return v.charAt(0) === '.' ? addCov(v) : v;
+        },
+        factory: function(v) {
+          return v.charAt(0) === '.' ? addCov(v) : v;
+        }
+      }).print_to_string(options.uglify);
+      data = instrumenter.instrumentSync(data);
+      filepath = filepath.replace('-debug.', '-cov.');
       writeFile(data, filepath);
     }
 
-// {
-//         id: id.replace(regType, '-debug.' + type),
-//         dependencies: function(id) {
-//           return id + '-debug';
-//         },
-//         require: function(id) {
-//           return id + '-debug';
-//         }
-//       }
     function addDebug(v) {
       var ext = extname(v);
       if (ext && options.parsers[ext]) {
@@ -67,6 +76,14 @@ exports.init = function(grunt, options) {
       }
     }
 
+    function addCov(v) {
+      var ext = extname(v);
+      if (ext && options.parsers[ext]) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-cov' + ext);
+      } else {
+        return v + '-cov';
+      }
+    }
   };
   return exports;
 

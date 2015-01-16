@@ -30,6 +30,9 @@ module.exports = function(grunt) {
       // create a file with hash
       hash: false,
 
+      // create a coverage file
+      cov: false,
+
       // process a template or not
       process: false,
 

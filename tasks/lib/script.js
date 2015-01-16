@@ -7,6 +7,8 @@ exports.init = function(grunt) {
   var relative = require('relative');
   var md5 = require('./util').md5;
   var _ = grunt.util._;
+  var Instrumenter = require('istanbul').Instrumenter;
+  var instrumenter = new Instrumenter();
 
   return {
     jsParser: jsParser
@@ -72,8 +74,24 @@ exports.init = function(grunt) {
 
     // create file with debug, xxx-debug.js
     if (options.debug) {
-      data = ast.modify(data, addDebug).print_to_string(options.uglify);
-      writeFile(data, addDebug(filepath));
+      // can't overide data
+      var data_ = ast.modify(data, addDebug).print_to_string(options.uglify);
+      writeFile(data_, addDebug(filepath));
+    }
+
+    // create file with coverage using istanbul, xxx-cov.js
+    if (options.cov) {
+      data = ast.modify(data, {
+        id: addCov,
+        dependencies: function(v) {
+          return v.charAt(0) === '.' ? addCov(v) : v;
+        },
+        factory: function(v) {
+          return v.charAt(0) === '.' ? addCov(v) : v;
+        }
+      }).print_to_string(options.uglify);
+      data = instrumenter.instrumentSync(data);
+      writeFile(data, addCov(filepath));
     }
 
     function getId(file) {
@@ -87,6 +105,15 @@ exports.init = function(grunt) {
         }
         return dep.replace(/\.js$/, '');
       });
+    }
+
+    function addCov(v) {
+      var ext = extname(v);
+      if (ext && options.parsers[ext]) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-cov' + ext);
+      } else {
+        return v + '-cov';
+      }
     }
 
     function addDebug(v) {

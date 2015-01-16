@@ -33,6 +33,7 @@
     "css2str": "~0.1.1",
     "handlebars": "1.0.11",
     "htmlclean": "~2.2.3",
+    "istanbul": "~0.3.5",
     "relative": "~1.2.0",
     "uglify-js": "~2.2.5"
   },

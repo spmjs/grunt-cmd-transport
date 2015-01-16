@@ -292,6 +292,26 @@ module.exports = function(grunt) {
           src: ['*.*', '!*.expect'],
           dest: 'test/expected/project'
         }]
+      },
+
+      coverage: {
+        options: {
+          paths: ['test/cases/project/sea-modules'],
+          alias: {
+            'list': 'alice/list/1.0.1/list.css',
+            'base': 'arale/base/1.1.1/base',
+            'confirmbox': 'arale/dialog/1.3.1/confirmbox',
+            'loading': 'alice/loading/1.0.0/loading.css'
+          },
+          idleading: 'family/name/',
+          cov: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/cases/project',
+          src: ['*.*', '!*.expect'],
+          dest: 'test/expected/project-cov'
+        }]
       }
     },
 

@@ -15,28 +15,43 @@ exports.init = function(grunt) {
   function jsParser(fileObj, options) {
     grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
 
-    /*
-      cache every filepath content to generate hash
-    */
+
+    // cache every filepath content to generate hash
+    //
+    // {
+    //   '/path/to/file': {
+    //     id: undefined,
+    //     dependencies: [],
+    //     depMap: {},
+    //     depsSpecified: false,
+    //     contents: contents,
+    //     path: path,
+    //     hash: md5(contents, [])
+    //   }
+    // }
     var fileCache = {};
 
     var file = getFileInfo(path.join(process.cwd(), fileObj.src));
 
     if (!file) return;
 
-    // create original file, xxx.js
-    var data = ast.modify(file.contents, {
-      id: unixy(options.idleading) + getId(file),
-      dependencies: getDeps(file),
-      require: function(v) {
-        // ignore when deps is specified by developer
-        return file.depsSpecified ? v : iduri.parseAlias(options, v);
-      }
-    }).print_to_string(options.uglify);
-    writeFile(data, fileObj.dest);
+    var data, filepath;
+    if (!options.hash) {
 
-    // create file with hash, xxx-2cio56s.js
-    if (options.hash) {
+      // create original file, xxx.js
+      data = ast.modify(file.contents, {
+        id: unixy(options.idleading) + getId(file),
+        dependencies: getDeps(file),
+        require: function(v) {
+          // ignore when deps is specified by developer
+          return file.depsSpecified ? v : iduri.parseAlias(options, v);
+        }
+      }).print_to_string(options.uglify);
+      filepath = fileObj.dest;
+      writeFile(data, filepath);
+    } else {
+
+      // create file with hash, xxx-2cio56s.js
       var hash = file.hash;
       data = ast.modify(file.contents, {
         id: unixy(options.idleading) + getId(file) + '-' + hash,
@@ -51,20 +66,14 @@ exports.init = function(grunt) {
           return iduri.parseAlias(options, v);
         }
       }).print_to_string(options.uglify);
-      writeFile(data, fileObj.dest.replace(/\.js$/, '-' + hash + '.js'));
+      filepath = fileObj.dest.replace(/\.js$/, '-' + hash + '.js');
+      writeFile(data, filepath);
     }
 
     // create file with debug, xxx-debug.js
     if (options.debug) {
-      data = ast.modify(file.contents, {
-        id: unixy(options.idleading) + addDebug(getId(file)),
-        dependencies: getDeps(file, addDebug),
-        require: function(v) {
-          // ignore when deps is specified by developer
-          return file.depsSpecified ? v : addDebug(iduri.parseAlias(options, v));
-        }
-      }).print_to_string(options.uglify);
-      writeFile(data, addDebug(fileObj.dest));
+      data = ast.modify(data, addDebug).print_to_string(options.uglify);
+      writeFile(data, addDebug(filepath));
     }
 
     function getId(file) {
@@ -81,7 +90,6 @@ exports.init = function(grunt) {
     }
 
     function addDebug(v) {
-      if (v.id) v = v.id;
       var ext = extname(v);
       if (ext && options.parsers[ext]) {
         return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);

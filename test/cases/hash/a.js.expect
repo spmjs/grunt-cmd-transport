@@ -1,4 +1,0 @@
-define("family/name/a", [ "./b", "./c/c", "$", "family/bar/bar", "arale/class/foo" ], function(require, exports, module) {
-    require("./b");
-    require("arale/class/foo");
-});

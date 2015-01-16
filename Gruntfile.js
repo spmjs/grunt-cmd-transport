@@ -262,7 +262,8 @@ module.exports = function(grunt) {
             '$': '$'
           },
           idleading: 'family/name/',
-          hash: true
+          hash: true,
+          debug: false
         },
         files: [{
           expand: true,
@@ -283,7 +284,7 @@ module.exports = function(grunt) {
           },
           idleading: 'family/name/',
           hash: true,
-          debug: false
+          debug: true
         },
         files: [{
           expand: true,

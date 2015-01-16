@@ -11,29 +11,31 @@ exports.init = function(grunt) {
 
   // the real css parser
   exports.cssParser = function(fileObj, options) {
-    var data = fileObj.srcData || grunt.file.read(fileObj.src);
+    var id, filepath, data = fileObj.srcData || grunt.file.read(fileObj.src);
 
-    var dest = fileObj.dest;
-    var ret = parseCss(data);
-    var id = unixy(options.idleading + fileObj.name);
-    var code = format('/*! define %s */\n%s', id, ret);
-    writeFile(code, dest);
+    if (!options.hash) {
 
-    if (options.debug) {
-      dest = fileObj.dest.replace(/\.css$/, '-debug.css');
-      ret = parseCss(data, addDebug);
-      id = unixy(options.idleading + fileObj.name.replace(/\.css$/, '-debug.css'));
-      code = format('/*! define %s */\n%s', id, ret);
-      writeFile(code, dest);
-    }
+      var ret = parseCss(data);
+      id = unixy(options.idleading + fileObj.name);
+      var code = format('/*! define %s */\n%s', id, ret);
+      filepath = fileObj.dest;
+      writeFile(code, filepath);
+    } else {
 
-    if (options.hash) {
       var hash = md5(data);
-      dest = fileObj.dest.replace(/\.css$/, '-' + hash + '.css');
       ret = parseCss(data, addHash);
       id = unixy(options.idleading + fileObj.name.replace(/\.css$/, '-' + hash + '.css'));
       code = format('/*! define %s */\n%s', id, ret);
-      writeFile(code, dest);
+      filepath = fileObj.dest.replace(/\.css$/, '-' + hash + '.css');
+      writeFile(code, filepath);
+    }
+
+    if (options.debug) {
+      ret = parseCss(data, addDebug);
+      id = id.replace(/\.css$/, '-debug.css');
+      code = format('/*! define %s */\n%s', id, ret);
+      filepath = filepath.replace(/\.css$/, '-debug.css');
+      writeFile(code, filepath);
     }
 
     function addDebug(node) {

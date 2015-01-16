@@ -1,4 +1,5 @@
 exports.init = function(grunt, options) {
+  var extname = require('path').extname;
   var format = require('util').format;
   var ast = require('cmd-util').ast;
   var md5 = require('./util').md5;
@@ -11,7 +12,7 @@ exports.init = function(grunt, options) {
   var exports = {};
 
   exports[type + 'Parser'] = function(fileObj, options) {
-    var dest, id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
+    var filepath, id = unixy(options.idleading + fileObj.name.replace(/\.js$/, ''));
     var data = fileObj.srcData || grunt.file.read(fileObj.src);
     var hash = md5(data);
     var deps = depParser ? depParser(data, options) : '';
@@ -21,35 +22,51 @@ exports.init = function(grunt, options) {
       dest: fileObj.dest + '.js'
     };
 
-    // create .{type}.js
-    data = ast.modify(file.contents, {
-      id: id
-    }).print_to_string(options.uglify);
-    writeFile(data, file.dest);
+    if (!options.hash) {
+
+      // create .{type}.js
+      data = ast.modify(file.contents, {
+        id: id
+      }).print_to_string(options.uglify);
+      filepath = file.dest;
+      writeFile(data, filepath);
+    } else {
+
+      // create hash file xxx-{hash}.{type}.js
+      if (options.hash) {
+        filepath = file.dest.replace(retTypeJs, '-' + hash + '.' + type + '.js');
+        data = ast.modify(file.contents, {
+          id: id.replace(regType, '-' + hash + '.' + type)
+        }).print_to_string(options.uglify);
+        writeFile(data, filepath);
+      }
+    }
 
     // create debug file xxx-debug.{type}.js
     if (options.debug) {
-      dest = file.dest.replace(retTypeJs, '-debug.' + type + '.js');
-      data = ast.modify(file.contents, {
-        id: id.replace(regType, '-debug.' + type),
-        dependencies: function(id) {
-          return id + '-debug';
-        },
-        require: function(id) {
-          return id + '-debug';
-        }
-      }).print_to_string(options.uglify);
-      writeFile(data, dest);
+      data = ast.modify(data, addDebug).print_to_string(options.uglify);
+      filepath = filepath.replace(retTypeJs, '-debug.' + type + '.js');
+      writeFile(data, filepath);
     }
 
-    // create hash file xxx-{hash}.{type}.js
-    if (options.hash) {
-      dest = file.dest.replace(retTypeJs, '-' + hash + '.' + type + '.js');
-      data = ast.modify(file.contents, {
-        id: id.replace(regType, '-' + hash + '.' + type)
-      }).print_to_string(options.uglify);
-      writeFile(data, dest);
+// {
+//         id: id.replace(regType, '-debug.' + type),
+//         dependencies: function(id) {
+//           return id + '-debug';
+//         },
+//         require: function(id) {
+//           return id + '-debug';
+//         }
+//       }
+    function addDebug(v) {
+      var ext = extname(v);
+      if (ext && options.parsers[ext]) {
+        return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
+      } else {
+        return v + '-debug';
+      }
     }
+
   };
   return exports;
 

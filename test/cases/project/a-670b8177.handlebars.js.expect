@@ -1,0 +1,28 @@
+define("family/name/a-670b8177.handlebars", [ "gallery/handlebars/1.0.2/runtime" ], function(require, exports, module) {
+    var Handlebars = require("gallery/handlebars/1.0.2/runtime");
+    var template = Handlebars.template;
+    module.exports = template(function(Handlebars, depth0, helpers, partials, data) {
+        this.compilerInfo = [ 3, ">= 1.0.0-rc.4" ];
+        helpers = helpers || {};
+        for (var key in Handlebars.helpers) {
+            helpers[key] = helpers[key] || Handlebars.helpers[key];
+        }
+        data = data || {};
+        var buffer = "", stack1, functionType = "function";
+        buffer += "<div>";
+        if (stack1 = helpers.data) {
+            stack1 = stack1.call(depth0, {
+                hash: {},
+                data: data
+            });
+        } else {
+            stack1 = depth0.data;
+            stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
+        }
+        if (stack1 || stack1 === 0) {
+            buffer += stack1;
+        }
+        buffer += "</div>\n";
+        return buffer;
+    });
+});

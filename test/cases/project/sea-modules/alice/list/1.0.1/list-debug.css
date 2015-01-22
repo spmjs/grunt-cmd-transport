@@ -1,0 +1,70 @@
+/*! define alice/list/1.0.1/list-debug.css */
+/* alice.list 样式模块 */
+
+.ui-list {
+    margin: 0;
+    padding: 10px;
+    list-style: square inside;
+}
+/* 默认有方角 */
+.ui-list-item {
+    font-size: 9px;
+    line-height: 20px;
+}
+.ui-list-item a {
+    line-height: 20px;
+    text-decoration: none;
+    color: #08c;    
+}
+
+.ui-list-item a,
+.ui-list-item span.ui-list-item-text {
+    font-size: 12px;
+    vertical-align: middle;    
+}
+
+.ui-list-item a:hover {
+    text-decoration: underline;    
+}
+
+/* 灰色小方角 */
+.ui-list-gray .ui-list-item {
+    color: #808080;
+}
+
+/* 灰色小方角＋灰色链接 */
+.ui-list-graylink .ui-list-item {
+    color: #808080;    
+}
+
+.ui-list-graylink .ui-list-item a {
+    color: #666;
+}
+
+/* 没有小图标的 */
+.ui-list-nosquare {
+    list-style: none;    
+}
+
+/* ui-dlist */
+
+.ui-dlist {
+    display: inline-block;
+    color: #808080;
+    font-size: 12px;
+    line-height: 2.2;
+}
+
+.ui-dlist-tit {
+    float: left;
+    width: 20%;/* 默认值, 具体根据视觉可改 */
+    text-align: right;
+    margin: 0;
+}
+
+.ui-dlist-det {
+    float: left;
+    width: 80%;/* 默认值，具体根据视觉可改 */
+    text-align: left;
+    margin: 0;
+}

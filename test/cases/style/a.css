@@ -3,13 +3,14 @@
 @import url("fineprint.css");
 
 body {
-  
+
   _color: red;
 }
 
 /* { } */
 .content li, .content a {
   *display: inline-block;
+  background: url("a.jpg")
 }
 
 @media screen {

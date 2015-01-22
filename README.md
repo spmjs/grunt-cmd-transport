@@ -131,7 +131,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-**Dec 4th, 2013** `0.4.0`
+**Jan 22th, 2015** `0.5.0`
+
+Support hash
+
+**Dec 4th, 2013** `0.4.1`
 
 fix Windows path #58
 

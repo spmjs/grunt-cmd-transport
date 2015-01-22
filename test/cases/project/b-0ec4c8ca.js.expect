@@ -1,0 +1,4 @@
+define("family/name/b-0ec4c8ca", [ "arale/base/1.1.1/base", "arale/class/1.1.0/class", "arale/events/1.1.0/events", "alice/loading/1.0.0/loading.css" ], function(require) {
+    require("arale/base/1.1.1/base");
+    require("alice/loading/1.0.0/loading.css");
+});

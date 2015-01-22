@@ -9,8 +9,8 @@
 
 module.exports = function(grunt) {
 
-  var style = require('./').style.init(grunt);
-  var css2jsParser = style.css2jsParser;
+  var css2js = require('./').css2js.init(grunt);
+  var css2jsParser = css2js.cssParser;
   var jsParser = require('./').script.init(grunt).jsParser;
 
   grunt.initConfig({
@@ -18,11 +18,11 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'tasks/**/*.js',
-        '<%= mochaTest.test.src %>',
+        '<%= mochaTest.test.src %>'
       ],
       options: {
-        jshintrc: '.jshintrc',
-      },
+        jshintrc: '.jshintrc'
+      }
     },
 
     clean: {
@@ -93,7 +93,10 @@ module.exports = function(grunt) {
       // rely on other modules
       rely: {
         options: {
-          paths: ['test/cases/assets']
+          paths: ['test/cases/assets'],
+          alias: {
+            foo: 'arale/class/foo'
+          }
         },
         files: [{
           expand: true,
@@ -185,7 +188,7 @@ module.exports = function(grunt) {
             '.css': [css2jsParser],
             '.js': [jsParser]
           },
-          styleBox: ["a.css"],
+          styleBox: ['a.css'],
           idleading: 'arale/widget/1.0.0/'
         },
         files: [{
@@ -248,6 +251,47 @@ module.exports = function(grunt) {
           src: '**/*.js',
           dest: 'test/expected/directory'
         }]
+      },
+
+      'hash': {
+        options: {
+          paths: ['test/cases/assets'],
+          alias: {
+            'foo': 'arale/class/foo',
+            'bar': 'family/bar/bar',
+            '$': '$'
+          },
+          idleading: 'family/name/',
+          hash: true,
+          debug: false
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/cases/hash',
+          src: '*.js',
+          dest: 'test/expected/hash'
+        }]
+      },
+
+      project: {
+        options: {
+          paths: ['test/cases/project/sea-modules'],
+          alias: {
+            'list': 'alice/list/1.0.1/list.css',
+            'base': 'arale/base/1.1.1/base',
+            'confirmbox': 'arale/dialog/1.3.1/confirmbox',
+            'loading': 'alice/loading/1.0.0/loading.css'
+          },
+          idleading: 'family/name/',
+          hash: true,
+          debug: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/cases/project',
+          src: ['*.*', '!*.expect'],
+          dest: 'test/expected/project'
+        }]
       }
     },
 
@@ -271,6 +315,6 @@ module.exports = function(grunt) {
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('test', ['clean', 'transport', 'mochaTest', 'clean']);
+  grunt.registerTask('test', ['clean', 'transport', 'mochaTest']);
 
 };

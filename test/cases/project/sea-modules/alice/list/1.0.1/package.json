@@ -1,0 +1,24 @@
+{
+    "name": "list",
+    "version": "1.0.1",
+    "family": "alice",
+    "description": "通用列表样式。",
+    "keywords": [
+        "列表"
+    ],
+    "homepage": "http://aliceui.org/list",
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aliceui/list"
+    },
+    "bugs": {
+        "url": "https://github.com/aliceui/list/issues"
+    },
+    "license": "MIT",
+    "spm": {
+        "alias": {
+        },
+        "output": ["list.css"]
+    }
+}

@@ -8,12 +8,12 @@
 
 module.exports = function(grunt) {
   var path = require('path');
-  var cmd = require('cmd-util');
 
   var text = require('./lib/text').init(grunt);
   var script = require('./lib/script').init(grunt);
   var style = require('./lib/style').init(grunt);
   var template = require('./lib/template').init(grunt);
+  var handlebars = require('./lib/handlebars').init(grunt);
   var json = require('./lib/json').init(grunt);
 
   grunt.registerMultiTask('transport', 'Transport everything into cmd.', function() {
@@ -27,6 +27,9 @@ module.exports = function(grunt) {
       // create a debug file or not
       debug: true,
 
+      // create a file with hash
+      hash: false,
+
       // process a template or not
       process: false,
 
@@ -34,10 +37,10 @@ module.exports = function(grunt) {
       parsers: {
         '.js': [script.jsParser],
         '.css': [style.cssParser],
-        '.html': [text.html2jsParser],
+        '.html': [text.htmlParser],
         '.json': [json.jsonParser],
         '.tpl': [template.tplParser],
-        '.handlebars': [template.handlebarsParser]
+        '.handlebars': [handlebars.handlebarsParser]
       },
 
       // for handlebars
@@ -93,6 +96,5 @@ module.exports = function(grunt) {
 
       count++;
     });
-    grunt.log.writeln('transport ' + count.toString().cyan + ' files');
   });
 };

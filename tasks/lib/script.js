@@ -1,225 +1,326 @@
 exports.init = function(grunt) {
+
   var path = require('path');
+  var extname = path.extname;
   var ast = require('cmd-util').ast;
   var iduri = require('cmd-util').iduri;
+  var relative = require('relative');
+  var md5 = require('./util').md5;
   var _ = grunt.util._;
 
+  return {
+    jsParser: jsParser
+  };
 
-  var exports = {};
-
-  exports.jsParser = function(fileObj, options) {
+  function jsParser(fileObj, options) {
     grunt.log.verbose.writeln('Transport ' + fileObj.src + ' -> ' + fileObj.dest);
-    var astCache, data = fileObj.srcData || grunt.file.read(fileObj.src);
-    try {
-      astCache = ast.getAst(data);
-    } catch(e) {
-      grunt.log.error('js parse error ' + fileObj.src.red);
-      grunt.fail.fatal(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
-    }
 
-    var meta = ast.parseFirst(astCache);
 
-    if (!meta) {
-      grunt.log.warn('found non cmd module "' + fileObj.src + '"');
-      // do nothing
-      return;
-    }
+    // cache every filepath content to generate hash
+    //
+    // {
+    //   '/path/to/file': {
+    //     id: undefined,
+    //     dependencies: [],
+    //     depMap: {},
+    //     depsSpecified: false,
+    //     contents: contents,
+    //     path: path,
+    //     hash: md5(contents, [])
+    //   }
+    // }
+    var fileCache = {};
 
-    if (meta.id) {
-      grunt.log.verbose.writeln('id exists in "' + fileObj.src + '"');
-    }
+    var file = getFileInfo(path.join(process.cwd(), fileObj.src));
 
-    var deps, depsSpecified = false;
-    if (meta.dependencyNode) {
-      deps = meta.dependencies;
-      depsSpecified = true;
-      grunt.log.verbose.writeln('dependencies exists in "' + fileObj.src + '"');
+    if (!file) return;
+
+    var data, filepath;
+    if (!options.hash) {
+
+      // create original file, xxx.js
+      data = ast.modify(file.contents, {
+        id: unixy(options.idleading) + getId(file),
+        dependencies: getDeps(file),
+        require: function(v) {
+          // ignore when deps is specified by developer
+          return file.depsSpecified ? v : iduri.parseAlias(options, v);
+        }
+      }).print_to_string(options.uglify);
+      filepath = fileObj.dest;
+      writeFile(data, filepath);
     } else {
-      deps = parseDependencies(fileObj.src, options);
-      grunt.log.verbose.writeln(deps.length ?
-        'found dependencies ' + deps : 'found no dependencies');
+
+      // create file with hash, xxx-2cio56s.js
+      var hash = file.hash;
+      data = ast.modify(file.contents, {
+        id: unixy(options.idleading) + getId(file) + '-' + hash,
+        dependencies: getDeps(file, addHash),
+        require: function(v) {
+          // ignore when deps is specified by developer
+          if (file.depsSpecified) return v;
+          var depFile = file.depMap[v];
+          if (depFile) {
+            return addHash(depFile);
+          }
+          return iduri.parseAlias(options, v);
+        }
+      }).print_to_string(options.uglify);
+      filepath = fileObj.dest.replace(/\.js$/, '-' + hash + '.js');
+      writeFile(data, filepath);
     }
 
-    // create .js file
-    astCache = ast.modify(astCache, {
-      id: meta.id ? meta.id : unixy(options.idleading + fileObj.name.replace(/\.js$/, '')),
-      dependencies: deps,
-      require: function(v) {
-        // ignore when deps is specified by developer
-        return depsSpecified ? v : iduri.parseAlias(options, v);
-      }
-    });
-    data = astCache.print_to_string(options.uglify);
-    grunt.file.write(fileObj.dest, addOuterBoxClass(data, options));
-
-
-    // create -debug.js file
-    if (!options.debug) {
-      return;
+    // create file with debug, xxx-debug.js
+    if (options.debug) {
+      data = ast.modify(data, addDebug).print_to_string(options.uglify);
+      writeFile(data, addDebug(filepath));
     }
-    var dest = fileObj.dest.replace(/\.js$/, '-debug.js');
 
-    astCache = ast.modify(data, function(v) {
-      var ext = path.extname(v);
+    function getId(file) {
+      return file.id || unixy(fileObj.name.replace(/\.js$/, ''));
+    }
 
+    function getDeps(file, fn) {
+      return file.dependencies.map(function(dep) {
+        if (typeof dep !== 'string') {
+          dep = fn ? fn(dep) : dep.id;
+        }
+        return dep.replace(/\.js$/, '');
+      });
+    }
+
+    function addDebug(v) {
+      var ext = extname(v);
       if (ext && options.parsers[ext]) {
         return v.replace(new RegExp('\\' + ext + '$'), '-debug' + ext);
       } else {
         return v + '-debug';
       }
-    });
-    data = astCache.print_to_string(options.uglify);
-    grunt.file.write(dest, addOuterBoxClass(data, options));
-  };
-
-
-  // helpers
-  // ----------------
-  function unixy(uri) {
-    return uri.replace(/\\/g, '/');
-  }
-
-  function getStyleId(options) {
-    return unixy((options || {}).idleading || '')
-      .replace(/\/$/, '')
-      .replace(/\//g, '-')
-      .replace(/\./g, '_');
-  }
-
-  function addOuterBoxClass(data, options) {
-    // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
-    var styleId = getStyleId(options);
-    if (options.styleBox && styleId) {
-      data = data.replace(/(\}\)[;\n\r ]*$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
-    }
-    return data;
-  }
-
-  function moduleDependencies(id, options) {
-    var alias = iduri.parseAlias(options, id);
-
-    if (iduri.isAlias(options, id) && alias === id) {
-      // usually this is "$"
-      return [];
     }
 
-    // don't resolve text!path/to/some.xx, same as seajs-text
-    if (/^text!/.test(id)) {
-      return [];
-    }
+    function addHash(v) {
+      if (v.id.charAt(0) !== '.') return v.id;
+      if (!v.hash) return v.id;
 
-    var file = iduri.appendext(alias);
-
-    if (!/\.js$/.test(file)) {
-      return [];
-    }
-
-    var fpath;
-    options.paths.some(function(base) {
-      var filepath = path.join(base, file);
-      if (grunt.file.exists(filepath)) {
-        grunt.log.verbose.writeln('find module "' + filepath + '"');
-        fpath = filepath;
-        return true;
+      var ext = extname(v.id);
+      if (ext && options.parsers[ext]) {
+        return v.id.replace(new RegExp('\\' + ext + '$'), '-' + v.hash + ext);
+      } else {
+        return v.id + '-' + v.hash;
       }
-    });
-
-    if (!fpath) {
-      grunt.fail.warn("can't find module " + alias);
-      return [];
     }
-    if (!grunt.file.exists(fpath)) {
-      grunt.fail.warn("can't find " + fpath);
-      return [];
+
+    function writeFile(data, dest) {
+      grunt.log.writeln('transport ' + dest + ' created');
+      grunt.file.write(dest, addOuterBoxClass(data + '\n', options));
     }
-    var data = grunt.file.read(fpath);
-    var parsed = ast.parse(data);
-    var deps = [];
 
-    var ids = parsed.map(function(meta) {
-      return meta.id;
-    });
+    // helpers
+    // ----------------
+    function unixy(uri) {
+      return uri.replace(/\\/g, '/');
+    }
 
-    parsed.forEach(function(meta) {
-      meta.dependencies.forEach(function(dep) {
-        dep = iduri.absolute(alias, dep);
-        if (!_.contains(deps, dep) && !_.contains(ids, dep) && !_.contains(ids, dep.replace(/\.js$/, ''))) {
-          deps.push(dep);
-        }
-      });
-    });
-    return deps;
-  }
+    function getStyleId() {
+      return unixy((options || {}).idleading || '')
+        .replace(/\/$/, '')
+        .replace(/\//g, '-')
+        .replace(/\./g, '_');
+    }
 
-  function parseDependencies(fpath, options) {
-    var rootpath = fpath;
-
-    function relativeDependencies(fpath, options, basefile) {
-      if (basefile) {
-        fpath = path.join(path.dirname(basefile), fpath);
+    function addOuterBoxClass(data) {
+      // ex. arale/widget/1.0.0/ => arale-widget-1_0_0
+      var styleId = getStyleId(options);
+      if (options.styleBox && styleId) {
+        data = data.replace(/(\}\)[;\n\r ]*$)/, 'module.exports.outerBoxClass="' + styleId + '";$1');
       }
-      fpath = iduri.appendext(fpath);
+      return data;
+    }
 
-      var deps = [];
-      var moduleDeps = {};
-
-      if (!grunt.file.exists(fpath)) {
-        if (!/\{\w+\}/.test(fpath)) {
-          grunt.log.warn("can't find " + fpath);
+    function parseFileDependencies(filepath, depMap) {
+      if (!grunt.file.exists(filepath)) {
+        if (!/\{\w+\}/.test(filepath)) {
+          grunt.log.warn('can\'t find ' + filepath);
         }
         return [];
       }
-      var parsed, data = grunt.file.read(fpath);
+
+      if (extname(filepath) !== '.js') {
+        return [];
+      }
+
+      var parsed, data = grunt.file.read(filepath);
       try {
         parsed = ast.parseFirst(data);
       } catch(e) {
         grunt.log.error(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
         return [];
       }
-      parsed.dependencies.map(function(id) {
-        return id.replace(/\.js$/, '');
-      }).forEach(function(id) {
 
+      return parsed.dependencies.map(function(id) {
         if (id.charAt(0) === '.') {
-          // fix nested relative dependencies
-          if (basefile) {
-            var altId = path.join(path.dirname(fpath), id).replace(/\\/g, '/');
-            var dirname = path.dirname(rootpath).replace(/\\/g, '/');
-            if ( dirname !== altId ) {
-              altId = path.relative(dirname, altId);
-            } else {
-              // the same name between file and directory
-              altId = path.relative(dirname, altId + '.js').replace(/\.js$/, '');
-            }
-            altId = altId.replace(/\\/g, '/');
-            if (altId.charAt(0) !== '.') {
-              altId = './' + altId;
-            }
-            deps.push(altId);
-          } else {
-            deps.push(id);
-          }
-          if (/\.js$/.test(iduri.appendext(id))) {
-            deps = grunt.util._.union(deps, relativeDependencies(id, options, fpath));
-          }
-        } else if (!moduleDeps[id]) {
-          var alias = iduri.parseAlias(options, id);
-          deps.push(alias);
-
-          // don't parse no javascript dependencies
-          var ext = path.extname(alias);
-          if (ext && ext !== '.js') return;
-
-          var mdeps = moduleDependencies(id, options);
-          moduleDeps[id] = mdeps;
-          deps = grunt.util._.union(deps, mdeps);
+          var origId = id;
+          id = iduri.appendext(id);
+          var depFilepath = path.join(path.dirname(filepath), id);
+          var depFile = getFileInfo(depFilepath);
+          if (!depFile) return;
+          var obj = {
+            id: origId,
+            path: depFile.path,
+            contents: depFile.contents,
+            hash: depFile.hash,
+            relative: true
+          };
+          if (depMap) depMap[origId] = obj;
+          return [obj].concat(parseFileDependencies(depFilepath));
+        } else {
+          return parseModuleDependencies(id);
         }
       });
-      return deps;
     }
 
-    return relativeDependencies(fpath, options);
-  }
+    function parseModuleDependencies(id) {
+      var alias = iduri.parseAlias(options, id);
 
-  return exports;
+      if (iduri.isAlias(options, id) && alias === id) {
+        // usually this is "$"
+        return [{id: id}];
+      }
+
+      // don't resolve text!path/to/some.xx, same as seajs-text
+      if (/^text!/.test(id)) {
+        return [{id: id}];
+      }
+
+      var fpath = iduri.appendext(alias);
+
+      var fbase;
+      options.paths.some(function(base) {
+        var filepath = path.join(base, fpath);
+        if (grunt.file.exists(filepath)) {
+          grunt.log.verbose.writeln('find module "' + filepath + '"');
+          fbase = base;
+          fpath = filepath;
+          return true;
+        }
+      });
+
+      if (!fpath) {
+        grunt.fail.warn('can\'t find module ' + alias);
+        return [{id: id}];
+      }
+
+      var file = getFileInfo(fpath);
+
+      if (!file) {
+        return [{id: id}];
+      }
+
+      // don't parse no javascript dependencies
+      if (!/\.js$/.test(fpath)) {
+        return [{
+          id: alias,
+          path: file.path,
+          hash: file.hash,
+          contents: file.contents
+        }];
+      }
+
+      var parsed = ast.parse(file.contents);
+      var ids = parsed.map(function(meta) {
+        return meta.id;
+      });
+      var deps = parsed.map(function(meta) {
+        return meta.dependencies.map(function(id) {
+          id = iduri.absolute(alias, id);
+          // won't return if deps were loaded(defined in file)
+          if (!_.contains(ids, id) && !_.contains(ids, id.replace(/\.js$/, ''))) {
+            id = iduri.appendext(id);
+            var file = getFileInfo(path.join(fbase, id));
+            if (!file) return;
+            return {
+              id: id,
+              path: file.path,
+              hash: file.hash,
+              contents: file.contents
+            };
+          }
+        });
+      });
+      return [{
+        id: alias,
+        path: file.path,
+        hash: file.hash,
+        contents: file.contents
+      }].concat(deps);
+    }
+
+    function getFileInfo(path){
+      if (fileCache[path]) {
+        return fileCache[path];
+      }
+
+      if (!grunt.file.exists(path)) return;
+      var astCache, deps, contents = grunt.file.read(path);
+
+      if (extname(path) !== '.js') {
+        return fileCache[path] = {
+          id: undefined,
+          dependencies: [],
+          depMap: {},
+          depsSpecified: false,
+          contents: contents,
+          path: path,
+          hash: md5(contents, [])
+        };
+      }
+
+      try {
+        astCache = ast.getAst(contents);
+      } catch(e) {
+        grunt.log.error('js parse error ' + path.red);
+        grunt.fail.fatal(e.message + ' [ line:' + e.line + ', col:' + e.col + ', pos:' + e.pos + ' ]');
+      }
+
+      // get id/deps of origin cmd module
+      var meta = ast.parseFirst(astCache), depMap = {};
+
+      if (!meta) {
+        grunt.log.warn('found non cmd module "' + path + '"');
+        // do nothing
+        return;
+      }
+
+      if (meta.id) {
+        grunt.log.verbose.writeln('id exists in "' + path + '"');
+      }
+
+      if (meta.dependencyNode) {
+        deps = meta.dependencies;
+        grunt.log.verbose.writeln('dependencies exists in "' + path + '"');
+      } else {
+        deps = parseFileDependencies(path, depMap);
+        deps = grunt.util._.chain(deps)
+          .flatten()
+          .filter(function(item) {return typeof item !== 'undefined'})
+          .uniq(function(item) {return item.path})
+          .each(function(item) {
+            if (item.relative) item.id = relative(path, item.path);
+          })
+          .value();
+        grunt.log.verbose.writeln(deps.length ?
+          'found dependencies ' + deps : 'found no dependencies');
+      }
+
+      return fileCache[path] = {
+        id: meta.id,
+        dependencies: deps,
+        depMap: depMap,
+        depsSpecified: typeof meta.dependencyNode !== 'undefined',
+        contents: contents,
+        path: path,
+        hash: typeof meta.dependencyNode !== 'undefined' ? '' : md5(contents, deps)
+      };
+    }
+  }
 };

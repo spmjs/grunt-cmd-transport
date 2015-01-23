@@ -131,6 +131,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**Jan 23th, 2015** `0.5.1`
+
+Fix css2js generate wrong code
+
 **Jan 22th, 2015** `0.5.0`
 
 Support hash

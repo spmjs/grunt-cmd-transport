@@ -10,11 +10,7 @@ exports.init = function(grunt) {
   });
 };
 exports.css2js = function(code, id, options, fileObj) {
-  var tpl = [
-    'define("%s", [], function() {',
-    "seajs.importStyle('%s')",
-    '});'
-  ].join('\n');
+  var tpl = 'define("%s", [], %s);';
   return format(tpl, id, css2js(code, options, fileObj));
 };
 

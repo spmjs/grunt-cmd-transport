@@ -21,5 +21,6 @@
   "sub": true,
   "passfail": false,
   "node": true,
-  "white": false
+  "white": false,
+  "mocha": true
 }

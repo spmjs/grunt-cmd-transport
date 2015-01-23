@@ -1,6 +1,11 @@
 var fs = require('fs');
 var path = require('path');
 var should = require('should');
+var css2js = require('../tasks/lib/css2js').css2js;
+
+var base = path.resolve('test/cases');
+var expected = path.resolve('test/expected');
+var dirs = fs.readdirSync(base);
 
 describe('file', function() {
   it('expand', function() {
@@ -8,9 +13,11 @@ describe('file', function() {
     should.exist(exist);
   });
 
-  var base = path.resolve('test/cases');
-  var expected = path.resolve('test/expected');
-  var dirs = fs.readdirSync(base);
+  it('css2js', function() {
+    var code = css2js('body{margin:0}', 'a', {});
+    code.should.eql('define("a", [], function() {seajs.importStyle(\'body{margin:0}\')});');
+  });
+
   dirs.forEach(function(dir) {
     var files = readDirs(path.join(base, dir)).filter(function(file) {
       return /\.expect$/.test(file);
